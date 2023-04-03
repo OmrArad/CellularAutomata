@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.LinkedList;
 
 public class Person {
@@ -86,6 +87,18 @@ public class Person {
                 return this.isSpreading; // should be false
             }
         }
+    }
+
+    public Color getColor() {
+        if (this.isSpreading) {
+            return Color.RED;
+        }
+        return switch(this.doubtLevel) {
+            case 1 -> Color.green;
+            case 2 -> Color.YELLOW;
+            case 3 -> Color.ORANGE;
+            default -> Color.BLACK;
+        };
     }
 
     public Location getLocation() {
