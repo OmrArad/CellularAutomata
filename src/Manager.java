@@ -14,6 +14,8 @@ public class Manager {
 
     private final HashSet<Person> potentialInfected;
 
+    private final GUI gui = new GUI();
+
 
     public Manager(double p, int l) {
         this.p = p;
@@ -25,6 +27,7 @@ public class Manager {
 
     public void Run() {
         // people creation
+        LinkedList<Person> people = new LinkedList<>();
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
                 double random = Math.random();
@@ -33,21 +36,26 @@ public class Manager {
                     Location location = new Location(i, j);
                     Person person = new Person(location, (int)(Math.random() * 4 + 1), l);
                     peopleMap.put(location, person);
+                    people.add(person);
                 }
             }
         }
-
+        this.gui.initData(people);
+        HashSet<Person> changed = new HashSet<>();
         // choose random person to spread rumor
         Random rand = new Random();
         ArrayList<Person> personList = new ArrayList<>(peopleMap.values());
         Person start = personList.get(rand.nextInt(personList.size()));
         start.startSpreading(0);
         this.infected.add(start);
+        changed.add(start);
+        this.gui.update(changed);
+        changed.clear();
 
         boolean stop = false;
         int rounds = 0;
         while(!stop) {
-
+            this.gui.play();
             // display
             // update csv
 
@@ -63,6 +71,7 @@ public class Manager {
                 }
                 i.forgetRumor();
             }
+            changed.addAll(this.infected);
             infected.clear();
 
             for (Person i : potentialInfected) {
@@ -72,12 +81,23 @@ public class Manager {
             }
 
             this.potentialInfected.clear();
+            changed.addAll(this.infected);
+            this.gui.update(changed);
+            changed.clear();
             rounds++;
             stop = rounds > 100;
+            this.pause(1);
         }
 
         // export csv
 
+    }
+
+    private static void pause(double seconds)
+    {
+        try {
+            Thread.sleep((long) (seconds * 1000));
+        } catch (InterruptedException e) {}
     }
 
 
