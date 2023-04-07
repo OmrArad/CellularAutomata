@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,22 +61,26 @@ public class GUI implements ActionListener {
         this.controls.setLayout(new FlowLayout());
 
         JButton pb = new JButton("Play");
+        pb.setIcon(new ImageIcon("icons/play.png"));
         pb.addActionListener(this);
         this.playButton = pb;
         this.controls.add(this.playButton);
 
         JButton pause = new JButton("Pause");
+        pause.setIcon(new ImageIcon("icons/pause.png"));
         pause.addActionListener(this);
         pause.setEnabled(false);
         this.stopButton = pause;
         this.controls.add(this.stopButton);
 
         JButton reset = new JButton("Reset");
+        reset.setIcon(new ImageIcon("icons/reset.png"));
         reset.addActionListener(this);
         this.resetButton = reset;
         this.controls.add(this.resetButton);
 
-        JLabel l1 = new JLabel("    L:");
+        JLabel l1 = new JLabel("L:");
+        l1.setBorder(new EmptyBorder(5,25,5,2));
         this.controls.add(l1);
 
         SpinnerModel model1 = new SpinnerNumberModel(L, 0, Integer.MAX_VALUE, 1);
@@ -82,7 +88,8 @@ public class GUI implements ActionListener {
         this.controls.add(spinner1);
         this.lValueSpinner = spinner1;
 
-        JLabel l2 = new JLabel("    P:");
+        JLabel l2 = new JLabel("P:");
+        l2.setBorder(new EmptyBorder(5,25,5,2));
         this.controls.add(l2);
 
         SpinnerModel model2 = new SpinnerNumberModel(P, 0.00, 1.00, 0.01);
@@ -91,7 +98,9 @@ public class GUI implements ActionListener {
         this.controls.add(spinner2);
         this.pValueSpinner = spinner2;
 
-        JLabel l3 = new JLabel("    Speed:");
+        JLabel l3 = new JLabel("Speed:");
+        l3.setIcon(new ImageIcon("icons/speedometer.png"));
+        l3.setBorder(new EmptyBorder(5,25,5,2));
         this.controls.add(l3);
 
         SpinnerModel model3 = new SpinnerNumberModel(1.0, 0.25, 4.00, 0.25);
@@ -110,6 +119,7 @@ public class GUI implements ActionListener {
         this.skipValueSpinner = spinner4;
 
         JButton skip = new JButton("Skip");
+        skip.setIcon(new ImageIcon("icons/skip.png"));
         skip.addActionListener(this);
         this.skipButton = skip;
         this.controls.add(this.skipButton);
