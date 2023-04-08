@@ -1,6 +1,5 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +9,7 @@ public class GUI implements ActionListener {
     private static final int L = 30;
     private static final double P = 0.8;
     private static final int DIMENSION = 100;
+    private static final int FRAME_SIZE = 5000;
 
     private final JFrame frame = new JFrame();
     private final JPanel controls = new JPanel();
@@ -32,21 +32,21 @@ public class GUI implements ActionListener {
     public GUI() {
         this.sim = new Simulator(P, L, DIMENSION);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setSize(5000,5000);
+        this.frame.setSize(FRAME_SIZE,FRAME_SIZE);
         this.frame.setLayout(new BorderLayout());
         this.setControlsPanel();
         this.setSimulationPanel();
         this.initData(this.sim.getInfoMap());
     }
 
-    public void initData(Map<Location, Person> data) {
+    private void initData(Map<Location, Person> data) {
         for (Person p : data.values()) {
             JButton jb = this.jbs.get(p.getLocation());
             jb.setBackground(p.getColor());
         }
     }
 
-    public void update(Set<Person> changed) {
+    private void update(Set<Person> changed) {
         for (Person p : changed) {
             JButton jb = this.jbs.get(p.getLocation());
             jb.setBackground(p.getColor());
@@ -103,7 +103,7 @@ public class GUI implements ActionListener {
         l3.setBorder(new EmptyBorder(5,25,5,2));
         this.controls.add(l3);
 
-        SpinnerModel model3 = new SpinnerNumberModel(1.0, 0.25, 4.00, 0.25);
+        SpinnerModel model3 = new SpinnerNumberModel(1.0, 0.25, 5.00, 0.25);
         JSpinner spinner3 = new JSpinner(model3);
         this.controls.add(spinner3);
         this.speedValueSpinner = spinner3;
