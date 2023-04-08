@@ -20,20 +20,31 @@ public class Person {
     // Rumor Bound
     private final int l;
 
-//    public Person(int x, int y, int doubtLevel) {
-//        this.location = new Location(x, y);
-//        this.doubtLevel = doubtLevel;
-//    }
+    private final LinkedList<Location> neighbors;
 
-//    public Person(int x, int y, int doubtLevel, boolean isSpreading) {
-//        this(x, y, doubtLevel);
-//        this.isSpreading = isSpreading;
-//    }
-
-    public Person(Location l, int doubtLevel, int rumorBound) {
+    public Person(Location l, int doubtLevel, int rumorBound, int gridSize) {
         this.location = l;
         this.doubtLevel = doubtLevel;
         this.l = rumorBound;
+
+        int x = this.location.getX();
+        int y = this.location.getY();
+
+        LinkedList<Location> neighbors = new LinkedList<>();
+
+        if (gridSize > 1) {
+            neighbors.add(new Location((x - 1) % gridSize, (y - 1) % gridSize));
+            neighbors.add(new Location(x, (y - 1) % gridSize));
+            neighbors.add(new Location((x + 1) % gridSize, (y - 1) % gridSize));
+            neighbors.add(new Location((x - 1) % gridSize, y));
+            neighbors.add(new Location((x + 1) % gridSize, y));
+            neighbors.add(new Location((x - 1) % gridSize, (y + 1) % gridSize));
+            neighbors.add(new Location(x, (y + 1) % gridSize));
+            neighbors.add(new Location((x + 1) % gridSize, (y + 1) % gridSize));
+        }
+
+        this.neighbors = neighbors;
+
     }
 
     public void startSpreading(int roundNumber) {
@@ -57,7 +68,7 @@ public class Person {
         this.countRumors++;
     }
 
-    public boolean belivesRumor(int roundNumber) {
+    public boolean believesRumor(int roundNumber) {
         int currentDoubtLevel = this.doubtLevel;
         if (this.countRumors > 1 && currentDoubtLevel > 1) {
             currentDoubtLevel--;
@@ -106,37 +117,7 @@ public class Person {
     }
 
     public LinkedList<Location> findNeighbors() {
-        int x = this.location.getX();
-        int y = this.location.getY();
-
-        LinkedList<Location> neighbors = new LinkedList<>();
-
-        neighbors.add(new Location((x - 1) % 100, (y - 1) % 100));
-        neighbors.add(new Location((x) % 100, (y - 1) % 100));
-        neighbors.add(new Location((x + 1) % 100, (y - 1) % 100));
-        neighbors.add(new Location((x - 1) % 100, (y) % 100));
-        neighbors.add(new Location((x + 1) % 100, (y) % 100));
-        neighbors.add(new Location((x - 1) % 100, (y + 1) % 100));
-        neighbors.add(new Location((x) % 100, (y + 1) % 100));
-        neighbors.add(new Location((x + 1) % 100, (y + 1) % 100));
-
-        return neighbors;
-
-//        if (x > 0 && y > 0 && x < 100 && y < 100) {
-//            // ...
-//        }
-//        else if (x == 0 && y > 0 && y < 100) {
-//            // ...
-//        }
-//        else if (x == 100 && y > 0 && y < 100) {
-//
-//        }
-//        else if (y == 0 && x > 0 && x < 100) {
-//
-//        }
-//        else if (y == 100 && x > 0 && x < 100) {
-//
-//        }
+        return this.neighbors;
     }
 
 
