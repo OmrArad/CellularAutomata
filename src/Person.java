@@ -102,13 +102,13 @@ public class Person {
 
     public Color getColor() {
         if (this.isSpreading) {
-            return Color.RED;
+            return new Color(250, 100, 50);
         }
         return switch(this.doubtLevel) {
-            case 1 -> Color.green;
-            case 2 -> Color.YELLOW;
-            case 3 -> Color.ORANGE;
-            default -> Color.BLACK;
+            case 1 -> new Color(170, 230, 250);
+            case 2 -> new Color(100, 200, 250);
+            case 3 -> new Color(30, 120, 250);
+            default -> new Color(0, 50, 250);
         };
     }
 
