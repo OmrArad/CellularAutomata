@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Simulator {
 
-    private int gridSize;
+    private final int gridSize;
     // Probability of Person creation
     private double p;
 
@@ -17,7 +17,7 @@ public class Simulator {
 
     private final HashSet<Person> potentialInfected;
 
-    private Set<Person> changed;
+    private final Set<Person> changed;
 
 
     public Simulator(double p, int l, int gridSize) {
@@ -39,15 +39,13 @@ public class Simulator {
         this.peopleMap.clear();
         this.potentialInfected.clear();
         // people creation
-        LinkedList<Person> people = new LinkedList<>();
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
                 double random = Math.random();
                 if (random <= this.p) {
                     Location location = new Location(i, j);
-                    Person person = new Person(location, (int)(Math.random() * 4 + 1), l);
+                    Person person = new Person(location, (int)(Math.random() * 4 + 1), l, this.gridSize);
                     peopleMap.put(location, person);
-                    people.add(person);
                 }
             }
         }
@@ -87,20 +85,13 @@ public class Simulator {
         infected.clear();
 
         for (Person i : potentialInfected) {
-            if (i.belivesRumor(this.currentRound)) {
+            if (i.believesRumor(this.currentRound)) {
                 this.infected.add(i);
             }
         }
         this.potentialInfected.clear();
         this.changed.addAll(this.infected);
         this.currentRound++;
-    }
-
-
-
-    public void reset() {
-        this.currentRound = 0;
-        this.init();
     }
 
     public void reset(double p, int l) {
