@@ -8,6 +8,7 @@ import java.util.*;
 public class GUI implements ActionListener {
     private static final int L = 30;
     private static final double P = 0.8;
+    private static final double S = 0.25;
     private static final int DIMENSION = 100;
     private static final int FRAME_SIZE = 5000;
 
@@ -23,10 +24,19 @@ public class GUI implements ActionListener {
     private JSpinner lValueSpinner;
     private JSpinner speedValueSpinner;
     private JSpinner skipValueSpinner;
+    private JSpinner s1Spinner;
+    private JSpinner s2Spinner;
+    private JSpinner s3Spinner;
+    private JSpinner s4Spinner;
     private boolean shouldStop = false;
     private int lastL = L;
     private double lastP = P;
+    private double lastS1 = S;
+    private double lastS2 = S;
+    private double lastS3 = S;
+    private double lastS4 = S;
     private final Simulator sim;
+
 
 
     public GUI() {
@@ -42,14 +52,21 @@ public class GUI implements ActionListener {
     private void initData(Map<Location, Person> data) {
         for (Person p : data.values()) {
             JButton jb = this.jbs.get(p.getLocation());
-            jb.setBackground(p.getColor());
+            jb.setBackground(p.getColor(0));
         }
     }
 
     private void update(Set<Person> changed) {
         for (Person p : changed) {
             JButton jb = this.jbs.get(p.getLocation());
-            jb.setBackground(p.getColor());
+            jb.setBackground(p.getColor(this.sim.getCurrentRound()));
+        }
+    }
+
+    private void update2(Map<Location, Person> data, int round) {
+        for (Person p : data.values()) {
+            JButton jb = this.jbs.get(p.getLocation());
+            jb.setBackground(p.getColor(round));
         }
     }
 
@@ -124,6 +141,43 @@ public class GUI implements ActionListener {
         this.skipButton = skip;
         this.controls.add(this.skipButton);
 
+        // s1,s2,s3,4 ratios
+        JLabel l5 = new JLabel("    S1:");
+        this.controls.add(l5);
+        SpinnerModel model5 = new SpinnerNumberModel(0.25, 0, 1, 0.01);
+        JSpinner s1Spinner = new JSpinner(model5);
+        s1Spinner.setPreferredSize(new Dimension(50, s1Spinner.getMinimumSize().height));
+        this.controls.add(s1Spinner);
+        this.s1Spinner = s1Spinner;
+        this.controls.add(this.s1Spinner);
+
+        JLabel l6 = new JLabel("S2:");
+        this.controls.add(l6);
+        SpinnerModel model6 = new SpinnerNumberModel(0.25, 0, 1, 0.01);
+        JSpinner s2spinner = new JSpinner(model6);
+        s2spinner.setPreferredSize(new Dimension(50, s2spinner.getMinimumSize().height));
+        this.controls.add(s2spinner);
+        this.s2Spinner = s2spinner;
+        this.controls.add(this.s2Spinner);
+
+        JLabel l7 = new JLabel("S3:");
+        this.controls.add(l7);
+        SpinnerModel model7 = new SpinnerNumberModel(0.25, 0, 1, 0.01);
+        JSpinner s3spinner = new JSpinner(model7);
+        s3spinner.setPreferredSize(new Dimension(50, s3spinner.getMinimumSize().height));
+        this.controls.add(s3spinner);
+        this.s3Spinner = s3spinner;
+        this.controls.add(this.s3Spinner);
+
+        JLabel l8 = new JLabel("S4:");
+        this.controls.add(l8);
+        SpinnerModel model8 = new SpinnerNumberModel(0.25, 0, 1, 0.01);
+        JSpinner s4spinner = new JSpinner(model8);
+        s4spinner.setPreferredSize(new Dimension(50, s4spinner.getMinimumSize().height));
+        this.controls.add(s4spinner);
+        this.s4Spinner = s4spinner;
+        this.controls.add(this.s4Spinner);
+
         this.frame.add(this.controls, BorderLayout.NORTH);
     }
 
@@ -146,6 +200,10 @@ public class GUI implements ActionListener {
         if (e.getSource() == this.playButton) {
             this.pValueSpinner.setEnabled(false);
             this.lValueSpinner.setEnabled(false);
+            this.s1Spinner.setEnabled(false);
+            this.s2Spinner.setEnabled(false);
+            this.s3Spinner.setEnabled(false);
+            this.s4Spinner.setEnabled(false);
             this.playButton.setEnabled(false);
             this.stopButton.setEnabled(true);
             this.shouldStop = false;
@@ -153,6 +211,10 @@ public class GUI implements ActionListener {
         } else if (e.getSource() == this.stopButton) {
             this.pValueSpinner.setEnabled(true);
             this.lValueSpinner.setEnabled(true);
+            this.s1Spinner.setEnabled(true);
+            this.s2Spinner.setEnabled(true);
+            this.s3Spinner.setEnabled(true);
+            this.s4Spinner.setEnabled(true);
             this.playButton.setEnabled(true);
             this.stopButton.setEnabled(false);
             this.shouldStop = true;
@@ -162,11 +224,45 @@ public class GUI implements ActionListener {
             this.shouldStop = true;
             this.playButton.setEnabled(true);
             this.stopButton.setEnabled(false);
+            this.s1Spinner.setEnabled(true);
+            this.s2Spinner.setEnabled(true);
+            this.s3Spinner.setEnabled(true);
+            this.s4Spinner.setEnabled(true);
+            double s1 = Double.parseDouble(this.s1Spinner.getValue().toString());
+            this.lastS1 = s1;
+            double s2 = Double.parseDouble(this.s2Spinner.getValue().toString());
+            this.lastS2 = s2;
+            double s3 = Double.parseDouble(this.s3Spinner.getValue().toString());
+            this.lastS3 = s3;
+            double s4 = Double.parseDouble(this.s4Spinner.getValue().toString());
+            this.lastS4 = s4;
+            double sum = s1 + s2 + s3 + s4;
+            if (sum < 1.0) {
+                this.lastS1 += Math.abs(1.0 - sum);
+                this.s1Spinner.setValue(this.lastS1);
+            } else if (sum > 1.0) {
+                this.lastS1 -= Math.abs(1.0 - sum);
+                if (this.lastS1 < 0) {
+                    this.lastS1 = S;
+                    this.lastS2 = S;
+                    this.lastS3 = S;
+                    this.lastS4 = S;
+                    this.s2Spinner.setValue(this.lastS2);
+                    this.s3Spinner.setValue(this.lastS3);
+                    this.s4Spinner.setValue(this.lastS4);
+                }
+                this.s1Spinner.setValue(this.lastS1);
+            } else {
+                this.s1Spinner.setValue(this.lastS1);
+                this.s2Spinner.setValue(this.lastS2);
+                this.s3Spinner.setValue(this.lastS3);
+                this.s4Spinner.setValue(this.lastS4);
+            }
             double p = Double.parseDouble(this.pValueSpinner.getValue().toString());
             this.lastP = p;
             int l = Integer.parseInt(this.lValueSpinner.getValue().toString());
             this.lastL = l;
-            this.sim.reset(p, l);
+            this.sim.reset(p, l, this.lastS1, this.lastS2, this.lastS3, this.lastS4);
             for (JButton b : this.jbs.values()) {
                 b.setBackground(Color.WHITE);
             }
@@ -204,7 +300,7 @@ public class GUI implements ActionListener {
         while(!this.shouldStop) {
             double speed = Double.parseDouble(this.speedValueSpinner.getValue().toString());
             this.sim.makeStep();
-            this.update(this.sim.getChanged());
+            this.update2(this.sim.getInfoMap(), this.sim.getCurrentRound());
             pause(1 / speed);
         }
     }
