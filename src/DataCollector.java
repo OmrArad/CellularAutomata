@@ -73,6 +73,7 @@ public class DataCollector {
         for(double pCurrent = pStart; pCurrent <= pEnd; pCurrent += pInc) {
             for (int lCurrent = lStart; lCurrent <= lEnd; lCurrent += lInc) {
                 DataCollector dc = new DataCollector(pCurrent, lCurrent, s1, s2, s3,s4);
+                dc.play();
                 dc.exportToCSV();
             }
         }
