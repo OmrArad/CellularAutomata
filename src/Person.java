@@ -2,6 +2,7 @@ import java.awt.*;
 import java.util.LinkedList;
 
 public class Person {
+    public final static int DIAGONAL = 1;
     // location in grid:
     private final Location location;
 
@@ -100,9 +101,12 @@ public class Person {
         }
     }
 
-    public Color getColor() {
+    public Color getColor(int roundNumber) {
         if (this.isSpreading) {
-            return new Color(250, 100, 50);
+            return new Color(222, 57, 5);
+        }
+        if (roundNumber != 0 && timeStamp >= 0 && roundNumber - timeStamp < l) {
+            return new Color(246, 136, 106);
         }
         return switch(this.doubtLevel) {
             case 1 -> new Color(170, 230, 250);
