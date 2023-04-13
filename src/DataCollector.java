@@ -1,7 +1,11 @@
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * DataCollector class, used for generating data.
+ */
 public class DataCollector {
+    // constant values
     private static final int ROUNDS = 120;
     private static final int ITERATIONS = 10;
     private static final int GRID_SIZE = 100;
@@ -15,6 +19,15 @@ public class DataCollector {
     private double[] ratesSum = new double[ROUNDS + 1];
     private final Simulator simulator;
 
+    /**
+     * Constructor.
+     * @param p probability.
+     * @param l rumor lifespan.
+     * @param s1 distribution of s1.
+     * @param s2 distribution of s2.
+     * @param s3 distribution of s3.
+     * @param s4 distribution of s4.
+     */
     public DataCollector(double p, int l, double s1, double s2, double s3, double s4) {
         this.simulator = new Simulator(p, l, GRID_SIZE, s1, s2, s3, s4);
         this.p = p;
@@ -25,6 +38,9 @@ public class DataCollector {
         this.s4 = s4;
     }
 
+    /**
+     * run the data collecting process.
+     */
     public void play() {
         for(int j = 0; j < ITERATIONS; j++) {
             this.ratesSum[0] += this.simulator.getInfectionRate() / (double) ITERATIONS;
@@ -36,6 +52,9 @@ public class DataCollector {
         }
     }
 
+    /**
+     * export the collected data to csv file.
+     */
     public void exportToCSV() {
         StringBuilder dataBuilder = new StringBuilder();
         StringBuilder nameBuilder = new StringBuilder();
@@ -70,6 +89,19 @@ public class DataCollector {
         }
     }
 
+    /**
+     * tool used for generating sets of data.
+     * @param pStart start value of p
+     * @param pEnd end value of p
+     * @param pInc increment value for p
+     * @param lStart start value of l
+     * @param lEnd end value of l
+     * @param lInc increment value of l
+     * @param s1 distribution of s1.
+     * @param s2 distribution of s2.
+     * @param s3 distribution of s3.
+     * @param s4 distribution of s4.
+     */
     public static void Iterate(double pStart, double pEnd, double pInc, int lStart, int lEnd, int lInc, double s1, double s2, double s3, double s4) {
         for(double pCurrent = pStart; pCurrent <= pEnd; pCurrent += pInc) {
             for (int lCurrent = lStart; lCurrent <= lEnd; lCurrent += lInc) {
