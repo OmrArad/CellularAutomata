@@ -28,6 +28,8 @@ public class GUI implements ActionListener {
     private JSpinner s2Spinner;
     private JSpinner s3Spinner;
     private JSpinner s4Spinner;
+    private JLabel countLabel;
+    private int count = 0;
     private boolean shouldStop = false;
     private int lastL = L;
     private double lastP = P;
@@ -36,8 +38,6 @@ public class GUI implements ActionListener {
     private double lastS3 = S;
     private double lastS4 = S;
     private final Simulator sim;
-
-
 
     public GUI() {
         this.sim = new Simulator(P, L, DIMENSION);
@@ -63,7 +63,7 @@ public class GUI implements ActionListener {
         }
     }
 
-    private void update2(Map<Location, Person> data, int round) {
+    private void update(Map<Location, Person> data, int round) {
         for (Person p : data.values()) {
             JButton jb = this.jbs.get(p.getLocation());
             jb.setBackground(p.getColor(round));
@@ -178,6 +178,12 @@ public class GUI implements ActionListener {
         this.s4Spinner = s4spinner;
         this.controls.add(this.s4Spinner);
 
+        JLabel l9 = new JLabel("    Counter:");
+        this.controls.add(l9);
+        JLabel countLabel = new JLabel("0");
+        this.controls.add(countLabel);
+        this.countLabel = countLabel;
+
         this.frame.add(this.controls, BorderLayout.NORTH);
     }
 
@@ -219,6 +225,8 @@ public class GUI implements ActionListener {
             this.stopButton.setEnabled(false);
             this.shouldStop = true;
         } else if (e.getSource() == this.resetButton) {
+            this.count = 0;
+            this.countLabel.setText("0");
             this.pValueSpinner.setEnabled(true);
             this.lValueSpinner.setEnabled(true);
             this.shouldStop = true;
@@ -278,10 +286,12 @@ public class GUI implements ActionListener {
             this.pValueSpinner.setValue(this.lastP);
             int steps = Integer.parseInt(this.skipValueSpinner.getValue().toString());
             for (int i = 0; i < steps; i++) {
+                this.count++;
                 this.sim.makeStep();
                 this.update(this.sim.getChanged());
             }
-            this.update(this.sim.getChanged());
+            this.update(this.sim.getInfoMap(), this.sim.getCurrentRound());
+            this.countLabel.setText(String.valueOf(this.count));
             this.playButton.setEnabled(true);
             this.resetButton.setEnabled(true);
         }
@@ -298,9 +308,11 @@ public class GUI implements ActionListener {
         this.lValueSpinner.setValue(this.lastL);
         this.pValueSpinner.setValue(this.lastP);
         while(!this.shouldStop) {
+            this.count++;
+            this.countLabel.setText(String.valueOf(this.count));
             double speed = Double.parseDouble(this.speedValueSpinner.getValue().toString());
             this.sim.makeStep();
-            this.update2(this.sim.getInfoMap(), this.sim.getCurrentRound());
+            this.update(this.sim.getInfoMap(), this.sim.getCurrentRound());
             pause(1 / speed);
         }
     }
