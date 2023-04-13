@@ -39,6 +39,7 @@ public class DataCollector {
     public void exportToCSV() {
         StringBuilder dataBuilder = new StringBuilder();
         StringBuilder nameBuilder = new StringBuilder();
+        dataBuilder.append("x,y\n");
         for (int i = 0; i <= ROUNDS; i++) {
             dataBuilder.append(i);
             dataBuilder.append(",");
