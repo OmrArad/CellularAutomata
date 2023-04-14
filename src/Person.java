@@ -56,16 +56,31 @@ public class Person {
         LinkedList<Location> lateral = new LinkedList<>();
         // generate the neighbors, using pacman style boundaries.
         if (gridSize > 1) {
-            diagonal.add(new Location((x - 1) % gridSize, (y - 1) % gridSize));
-            diagonal.add(new Location((x + 1) % gridSize, (y - 1) % gridSize));
-            diagonal.add(new Location((x - 1) % gridSize, (y + 1) % gridSize));
-            diagonal.add(new Location((x + 1) % gridSize, (y + 1) % gridSize));
+            int nextX = (x + 1) % gridSize;
+            int nextY = (y + 1) % gridSize;
+            int prevX, prevY;
+            // handle the cases x == 0 , y == 0
+            if (x != 0) {
+                prevX = x - 1;
+            } else {
+                prevX = gridSize - 1;
+            }
+            if (y != 0) {
+                prevY = y - 1;
+            } else {
+                prevY = gridSize - 1;
+            }
+
+            diagonal.add(new Location(prevX, prevY));
+            diagonal.add(new Location(nextX, prevY));
+            diagonal.add(new Location(prevX, nextY));
+            diagonal.add(new Location(nextX, nextY));
             neighbors.addAll(diagonal);
 
-            lateral.add(new Location(x, (y - 1) % gridSize));
-            lateral.add(new Location((x - 1) % gridSize, y));
-            lateral.add(new Location((x + 1) % gridSize, y));
-            lateral.add(new Location(x, (y + 1) % gridSize));
+            lateral.add(new Location(x, prevY));
+            lateral.add(new Location(prevX, y));
+            lateral.add(new Location(nextX, y));
+            lateral.add(new Location(x, nextY));
             neighbors.addAll(lateral);
         }
 
