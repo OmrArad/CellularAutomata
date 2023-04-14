@@ -10,6 +10,7 @@ public class DataCollector {
     private static final int ITERATIONS = 10;
     private static final int GRID_SIZE = 100;
 
+    private final byte nType;
     private double p;
     private int l;
     private double s1;
@@ -29,6 +30,20 @@ public class DataCollector {
      * @param s4 distribution of s4.
      */
     public DataCollector(double p, int l, double s1, double s2, double s3, double s4) {
+        this(p, l, s1, s2, s3, s4, Person.ALL);
+    }
+
+    /**
+     * Constructor.
+     * @param p probability.
+     * @param l rumor lifespan.
+     * @param s1 distribution of s1.
+     * @param s2 distribution of s2.
+     * @param s3 distribution of s3.
+     * @param s4 distribution of s4.
+     * @param ofType type of neighbors.
+     */
+    public DataCollector(double p, int l, double s1, double s2, double s3, double s4, byte ofType) {
         this.simulator = new Simulator(p, l, GRID_SIZE, s1, s2, s3, s4);
         this.p = p;
         this.l = l;
@@ -36,6 +51,7 @@ public class DataCollector {
         this.s2 = s2;
         this.s3 = s3;
         this.s4 = s4;
+        this.nType = ofType;
     }
 
     /**
@@ -45,7 +61,7 @@ public class DataCollector {
         for(int j = 0; j < ITERATIONS; j++) {
             this.ratesSum[0] += this.simulator.getInfectionRate() / (double) ITERATIONS;
             for (int i = 1; i <= ROUNDS; i++) {
-                this.simulator.makeStep(Person.ALL);
+                this.simulator.makeStep(this.nType);
                 this.ratesSum[i] += this.simulator.getInfectionRate() / (double) ITERATIONS;
             }
             this.simulator.reset(this.p, this.l, this.s1, this.s2, this.s3, this.s4);
@@ -101,11 +117,12 @@ public class DataCollector {
      * @param s2 distribution of s2.
      * @param s3 distribution of s3.
      * @param s4 distribution of s4.
+     * @param ofType type of neighbors.
      */
-    public static void Iterate(double pStart, double pEnd, double pInc, int lStart, int lEnd, int lInc, double s1, double s2, double s3, double s4) {
+    public static void Iterate(double pStart, double pEnd, double pInc, int lStart, int lEnd, int lInc, double s1, double s2, double s3, double s4, byte ofType) {
         for(double pCurrent = pStart; pCurrent <= pEnd; pCurrent += pInc) {
             for (int lCurrent = lStart; lCurrent <= lEnd; lCurrent += lInc) {
-                DataCollector dc = new DataCollector(pCurrent, lCurrent, s1, s2, s3,s4);
+                DataCollector dc = new DataCollector(pCurrent, lCurrent, s1, s2, s3, s4, ofType);
                 dc.play();
                 dc.exportToCSV();
             }
