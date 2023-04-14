@@ -1,3 +1,5 @@
+import com.sun.source.tree.BreakTree;
+
 import java.awt.*;
 import java.util.LinkedList;
 
@@ -5,6 +7,12 @@ import java.util.LinkedList;
  * Person class.
  */
 public class Person {
+    // constants
+    public static final byte NONE = 0;
+    public static final byte DIAGONAL = 1;
+    public static final byte LATERAL = 2;
+    public static final byte ALL = 3;
+
     // location in grid:
     private final Location location;
 
@@ -25,6 +33,8 @@ public class Person {
 
     // the person's neighbors
     private final LinkedList<Location> neighbors;
+    private final LinkedList<Location> diagonalNeighbors;
+    private final LinkedList<Location> lateralNeighbors;
 
     /**
      * Constructor.
@@ -42,19 +52,26 @@ public class Person {
         int y = this.location.getY();
 
         LinkedList<Location> neighbors = new LinkedList<>();
-        // generate the neighbors, using pacman like boundaries.
+        LinkedList<Location> diagonal = new LinkedList<>();
+        LinkedList<Location> lateral = new LinkedList<>();
+        // generate the neighbors, using pacman style boundaries.
         if (gridSize > 1) {
-            neighbors.add(new Location((x - 1) % gridSize, (y - 1) % gridSize));
-            neighbors.add(new Location(x, (y - 1) % gridSize));
-            neighbors.add(new Location((x + 1) % gridSize, (y - 1) % gridSize));
-            neighbors.add(new Location((x - 1) % gridSize, y));
-            neighbors.add(new Location((x + 1) % gridSize, y));
-            neighbors.add(new Location((x - 1) % gridSize, (y + 1) % gridSize));
-            neighbors.add(new Location(x, (y + 1) % gridSize));
-            neighbors.add(new Location((x + 1) % gridSize, (y + 1) % gridSize));
+            diagonal.add(new Location((x - 1) % gridSize, (y - 1) % gridSize));
+            diagonal.add(new Location((x + 1) % gridSize, (y - 1) % gridSize));
+            diagonal.add(new Location((x - 1) % gridSize, (y + 1) % gridSize));
+            diagonal.add(new Location((x + 1) % gridSize, (y + 1) % gridSize));
+            neighbors.addAll(diagonal);
+
+            lateral.add(new Location(x, (y - 1) % gridSize));
+            lateral.add(new Location((x - 1) % gridSize, y));
+            lateral.add(new Location((x + 1) % gridSize, y));
+            lateral.add(new Location(x, (y + 1) % gridSize));
+            neighbors.addAll(lateral);
         }
 
         this.neighbors = neighbors;
+        this.diagonalNeighbors = diagonal;
+        this.lateralNeighbors = lateral;
 
     }
 
@@ -169,12 +186,19 @@ public class Person {
         return location;
     }
 
+
     /**
-     * get the neighbors locations.
-     * @return a list of type Location.
+     * get the neighbors locations
+     * @param ofType type of neighbor.
+     * @return a list of locations.
      */
-    public LinkedList<Location> findNeighbors() {
-        return this.neighbors;
+    public LinkedList<Location> findNeighbors(byte ofType) {
+        return switch (ofType) {
+            case DIAGONAL -> this.diagonalNeighbors;
+            case LATERAL -> this.lateralNeighbors;
+            case ALL -> this.neighbors;
+            default -> new LinkedList<>();
+        };
     }
 
 

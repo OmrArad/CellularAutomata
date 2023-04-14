@@ -40,15 +40,21 @@ public class GUI implements ActionListener {
     private JSpinner s4Spinner;
     // label, part of the control panel.
     private JLabel countLabel;
+    // check boxes
+    private JCheckBox diagonalCB;
+    private JCheckBox lateralCB;
 
-    private int count = 0;
+    // set default values
     private boolean shouldStop = false;
-    private int lastL = L;
     private double lastP = P;
     private double lastS1 = S;
     private double lastS2 = S;
     private double lastS3 = S;
     private double lastS4 = S;
+    private int count = 0;
+    private int lastL = L;
+    private byte lastType = Person.ALL;
+
     private final Simulator sim;
 
     /**
@@ -224,12 +230,25 @@ public class GUI implements ActionListener {
         this.s4Spinner = s4spinner;
         this.controls.add(this.s4Spinner);
 
-        // make round counter
-        JLabel l9 = new JLabel("    Round:");
+        // make neighbors type check boxes
+        JLabel l9 = new JLabel("    Neighbors:");
         this.controls.add(l9);
+
+        JCheckBox jcb1 = new JCheckBox("Diagonal", true);
+        this.diagonalCB = jcb1;
+        this.controls.add(jcb1);
+        JCheckBox jcb2 = new JCheckBox("Lateral", true);
+        this.lateralCB = jcb2;
+        this.controls.add(jcb2);
+
+        // make round counter
+        JLabel l10 = new JLabel("    Round:");
+        this.controls.add(l10);
         JLabel countLabel = new JLabel("0");
         this.controls.add(countLabel);
         this.countLabel = countLabel;
+
+
 
         // add the panel to the frame
         this.frame.add(this.controls, BorderLayout.NORTH);
@@ -254,6 +273,27 @@ public class GUI implements ActionListener {
         }
         // add panel to frame
         this.frame.add(this.table, BorderLayout.CENTER);
+    }
+
+    /**
+     * set the type of neighbors to fetch.
+     * @param d should fetch diagonal
+     * @param l should fetch lateral
+     */
+    private void setType(boolean d, boolean l) {
+        if (d) {
+            if (l) {
+                // both true
+                this.lastType = Person.ALL;
+            } else {
+                this.lastType = Person.DIAGONAL;
+            }
+        } else if (l) {
+            this.lastType = Person.LATERAL;
+        } else {
+            // both false
+            this.lastType = Person.NONE;
+        }
     }
 
     @Override
@@ -371,7 +411,8 @@ public class GUI implements ActionListener {
             // run the needed steps.
             for (int i = 0; i < steps; i++) {
                 this.count++;
-                this.sim.makeStep();
+                this.setType(this.diagonalCB.isSelected(), this.lateralCB.isSelected());
+                this.sim.makeStep(this.lastType);
                 this.update(this.sim.getChanged());
             }
             // update the visual component.
@@ -407,8 +448,9 @@ public class GUI implements ActionListener {
             this.count++;
             this.countLabel.setText(String.valueOf(this.count));
             double speed = Double.parseDouble(this.speedValueSpinner.getValue().toString());
+            this.setType(this.diagonalCB.isSelected(), this.lateralCB.isSelected());
             // make a single simulation step.
-            this.sim.makeStep();
+            this.sim.makeStep(this.lastType);
             // update the cells colours.
             this.update(this.sim.getInfoMap(), this.sim.getCurrentRound());
             // delay presentation.

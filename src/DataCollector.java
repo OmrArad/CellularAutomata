@@ -45,7 +45,7 @@ public class DataCollector {
         for(int j = 0; j < ITERATIONS; j++) {
             this.ratesSum[0] += this.simulator.getInfectionRate() / (double) ITERATIONS;
             for (int i = 1; i <= ROUNDS; i++) {
-                this.simulator.makeStep();
+                this.simulator.makeStep(Person.ALL);
                 this.ratesSum[i] += this.simulator.getInfectionRate() / (double) ITERATIONS;
             }
             this.simulator.reset(this.p, this.l, this.s1, this.s2, this.s3, this.s4);

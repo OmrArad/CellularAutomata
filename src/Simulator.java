@@ -170,12 +170,12 @@ public class Simulator {
     /**
      * make a single simulation step.
      */
-    public void makeStep() {
+    public void makeStep(byte ofType) {
         // clear the changed set.
         this.changed.clear();
         // for every infected Person, tell its neighbors the rumour.
         for (Person i : infected) {
-            LinkedList<Location> neighbors = i.findNeighbors();
+            LinkedList<Location> neighbors = i.findNeighbors(ofType);
             for (Location l : neighbors) {
                 if (peopleMap.containsKey(l)) {
                     Person p = peopleMap.get(l);
