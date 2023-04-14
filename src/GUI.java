@@ -125,14 +125,14 @@ public class GUI implements ActionListener {
 
         // make play button
         JButton pb = new JButton("Play");
-        pb.setIcon(new ImageIcon("icons/play.png"));
+        pb.setIcon(new ImageIcon(getClass().getResource("/play.png")));
         pb.addActionListener(this);
         this.playButton = pb;
         this.controls.add(this.playButton);
 
         // make pause button
         JButton pause = new JButton("Pause");
-        pause.setIcon(new ImageIcon("icons/pause.png"));
+        pause.setIcon(new ImageIcon(getClass().getResource("/pause.png")));
         pause.addActionListener(this);
         pause.setEnabled(false);
         this.stopButton = pause;
@@ -140,7 +140,7 @@ public class GUI implements ActionListener {
 
         // make reset button
         JButton reset = new JButton("Reset");
-        reset.setIcon(new ImageIcon("icons/reset.png"));
+        reset.setIcon(new ImageIcon(getClass().getResource("/reset.png")));
         reset.addActionListener(this);
         this.resetButton = reset;
         this.controls.add(this.resetButton);
@@ -168,7 +168,8 @@ public class GUI implements ActionListener {
 
         // make speed value spinner
         JLabel l3 = new JLabel("Speed:");
-        l3.setIcon(new ImageIcon("icons/speedometer.png"));
+        l3.setIcon(new ImageIcon(getClass().getResource("/speedometer.png")));
+        //l3.setIcon(new ImageIcon("icons/speedometer.png"));
         l3.setBorder(new EmptyBorder(5,25,5,2));
         this.controls.add(l3);
 
@@ -188,7 +189,7 @@ public class GUI implements ActionListener {
         this.skipValueSpinner = spinner4;
 
         JButton skip = new JButton("Skip");
-        skip.setIcon(new ImageIcon("icons/skip.png"));
+        skip.setIcon(new ImageIcon(getClass().getResource("/skip.png")));
         skip.addActionListener(this);
         this.skipButton = skip;
         this.controls.add(this.skipButton);
@@ -196,7 +197,7 @@ public class GUI implements ActionListener {
         // s1,s2,s3,4 ratios
         JLabel l5 = new JLabel("    S1:");
         this.controls.add(l5);
-        SpinnerModel model5 = new SpinnerNumberModel(0.25, 0, 1, 0.01);
+        SpinnerModel model5 = new SpinnerNumberModel(this.lastS1, 0, 1, 0.01);
         JSpinner s1Spinner = new JSpinner(model5);
         s1Spinner.setPreferredSize(new Dimension(50, s1Spinner.getMinimumSize().height));
         this.controls.add(s1Spinner);
@@ -205,7 +206,7 @@ public class GUI implements ActionListener {
 
         JLabel l6 = new JLabel("S2:");
         this.controls.add(l6);
-        SpinnerModel model6 = new SpinnerNumberModel(0.25, 0, 1, 0.01);
+        SpinnerModel model6 = new SpinnerNumberModel(this.lastS2, 0, 1, 0.01);
         JSpinner s2spinner = new JSpinner(model6);
         s2spinner.setPreferredSize(new Dimension(50, s2spinner.getMinimumSize().height));
         this.controls.add(s2spinner);
@@ -214,7 +215,7 @@ public class GUI implements ActionListener {
 
         JLabel l7 = new JLabel("S3:");
         this.controls.add(l7);
-        SpinnerModel model7 = new SpinnerNumberModel(0.25, 0, 1, 0.01);
+        SpinnerModel model7 = new SpinnerNumberModel(this.lastS3, 0, 1, 0.01);
         JSpinner s3spinner = new JSpinner(model7);
         s3spinner.setPreferredSize(new Dimension(50, s3spinner.getMinimumSize().height));
         this.controls.add(s3spinner);
@@ -223,7 +224,7 @@ public class GUI implements ActionListener {
 
         JLabel l8 = new JLabel("S4:");
         this.controls.add(l8);
-        SpinnerModel model8 = new SpinnerNumberModel(0.25, 0, 1, 0.01);
+        SpinnerModel model8 = new SpinnerNumberModel(this.lastS4, 0, 1, 0.01);
         JSpinner s4spinner = new JSpinner(model8);
         s4spinner.setPreferredSize(new Dimension(50, s4spinner.getMinimumSize().height));
         this.controls.add(s4spinner);
