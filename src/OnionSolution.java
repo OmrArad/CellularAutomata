@@ -10,7 +10,7 @@ public class OnionSolution extends Solution{
         int rowEnd = gridSize - 1;
         int colEnd = gridSize - 1;
         int count = 0;
-        int s_counters[] = new int[DOUBT_LEVELS];
+        int[] s_counters = new int[DOUBT_LEVELS];
 
         while (rowStart <= rowEnd && colStart <= colEnd) {
             // doubt top row
