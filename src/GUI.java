@@ -56,6 +56,7 @@ public class GUI implements ActionListener {
     private byte lastType = Person.ALL;
 
     private final Simulator sim;
+    private JButton loadButton;
 
     /**
      * Constructor.
@@ -74,6 +75,8 @@ public class GUI implements ActionListener {
         // initialize the data.
         this.initData(this.sim.getInfoMap());
     }
+
+
 
     /**
      * set the adequate colours for each spot.
@@ -245,10 +248,13 @@ public class GUI implements ActionListener {
         // make round counter
         JLabel l10 = new JLabel("    Round:");
         this.controls.add(l10);
-        JLabel countLabel = new JLabel("0");
+        JLabel countLabel = new JLabel("0   ");
         this.controls.add(countLabel);
         this.countLabel = countLabel;
 
+        this.loadButton = new JButton("Load");
+        this.controls.add(this.loadButton);
+        this.loadButton.addActionListener(this);
 
 
         // add the panel to the frame
@@ -332,7 +338,7 @@ public class GUI implements ActionListener {
             // set reset button functionality
             //reset the count (current round) value to 0
             this.count = 0;
-            this.countLabel.setText("0");
+            this.countLabel.setText("0  ");
             // turn on
             this.pValueSpinner.setEnabled(true);
             this.lValueSpinner.setEnabled(true);
@@ -423,8 +429,39 @@ public class GUI implements ActionListener {
             // turn on needed buttons.
             this.playButton.setEnabled(true);
             this.resetButton.setEnabled(true);
+        } else if(e.getSource() == this.loadButton) {
+            this.shouldStop = true;
+            this.playButton.setEnabled(true);
+            this.resetButton.setEnabled(true);
+            this.stopButton.setEnabled(false);
+            this.s1Spinner.setEnabled(false);
+            this.s2Spinner.setEnabled(false);
+            this.s3Spinner.setEnabled(false);
+            this.s4Spinner.setEnabled(false);
+            this.lastL = Integer.parseInt(this.lValueSpinner.getValue().toString());
+            this.count = 0;
+            this.countLabel.setText("0  ");
+            this.loadSolution(new OnionSolution(DIMENSION, this.lastL));
         }
     }
+
+    private void loadSolution(Solution solution) {
+        this.lastS1 = solution.getS1();
+        this.lastS2 = solution.getS2();
+        this.lastS3 = solution.getS3();
+        this.lastS4 = solution.getS4();
+        this.s1Spinner.setValue(this.lastS1);
+        this.s2Spinner.setValue(this.lastS2);
+        this.s3Spinner.setValue(this.lastS3);
+        this.s4Spinner.setValue(this.lastS4);
+        this.sim.reset(solution.getL() ,solution.getMap(), solution.getFirst());
+        for (JButton b : this.jbs.values()) {
+            b.setBackground(Color.WHITE);
+        }
+        // set the correct colours using the initData method.
+        this.initData(solution.getMap());
+    }
+
 
     /**
      * used for delaying the visual progression of the simulation.

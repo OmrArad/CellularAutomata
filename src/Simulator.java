@@ -16,7 +16,7 @@ public class Simulator {
 
     private final LinkedList<Person> infected;
 
-    private final Map<Location, Person> peopleMap;
+    private Map<Location, Person> peopleMap;
 
     private final HashSet<Person> potentialInfected;
 
@@ -151,6 +151,17 @@ public class Simulator {
         }
     }
 
+    private void init(HashMap<Location, Person> m, Person i) {
+        this.infected.clear();
+        this.peopleMap.clear();
+        this.potentialInfected.clear();
+        this.allTimeInfected.clear();
+        this.peopleMap = m;
+        i.startSpreading(0);
+        this.infected.add(i);
+        this.allTimeInfected.add(i);
+    }
+
     /**
      * get the data map.
      * @return Map of Location -> Person.
@@ -219,6 +230,12 @@ public class Simulator {
         this.p = p;
         this.currentRound = 0;
         this.init(s1, s2, s3, s4);
+    }
+
+    public void reset(int l, HashMap<Location, Person> m, Person start) {
+        this.l = l;
+        this.currentRound = 0;
+        this.init(m, start);
     }
 
     /**
