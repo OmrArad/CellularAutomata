@@ -5,24 +5,24 @@ import java.util.*;
  */
 public class Simulator {
 
-    private final int gridSize;
+    private int gridSize;
     // Probability of Person creation
     private double p;
 
     // Rumor Bound
     private int l;
 
-    private int currentRound;
+    private int currentRound = 0;
 
-    private final LinkedList<Person> infected;
+    private final LinkedList<Person> infected = new LinkedList<>();
 
     private Map<Location, Person> peopleMap;
 
-    private final HashSet<Person> potentialInfected;
+    private final HashSet<Person> potentialInfected = new HashSet<>();
 
-    private final Set<Person> changed;
+    private final Set<Person> changed = new HashSet<>();
 
-    private final Set<Person> allTimeInfected;
+    private final Set<Person> allTimeInfected = new HashSet<>();
 
     /**
      * Constructor.
@@ -51,13 +51,14 @@ public class Simulator {
         this.l = l;
         this.currentRound = 0;
         // make needed data structures
-        this.infected = new LinkedList<>();
         this.peopleMap = new HashMap<>();
-        this.potentialInfected = new HashSet<>();
-        this.allTimeInfected = new HashSet<>();
-        this.changed = new HashSet<>();
         // initialise the simulation.
         this.init(s1, s2, s3, s4);
+    }
+
+    public Simulator(Solution s) {
+        this.l = s.getL();
+        this.init(s.getMap(), s.getFirst());
     }
 
     /**
@@ -153,7 +154,6 @@ public class Simulator {
 
     private void init(HashMap<Location, Person> m, Person i) {
         this.infected.clear();
-        this.peopleMap.clear();
         this.potentialInfected.clear();
         this.allTimeInfected.clear();
         this.peopleMap = m;

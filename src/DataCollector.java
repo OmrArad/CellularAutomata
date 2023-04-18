@@ -54,6 +54,16 @@ public class DataCollector {
         this.nType = ofType;
     }
 
+    public DataCollector(Solution s, byte ofType) {
+        this.l = s.getL();
+        this.nType = ofType;
+        this.simulator = new Simulator(s);
+    }
+
+    public DataCollector(Solution s) {
+        this(s, Person.ALL);
+    }
+
     /**
      * run the data collecting process.
      */
@@ -126,6 +136,15 @@ public class DataCollector {
                 dc.play();
                 dc.exportToCSV();
             }
+        }
+    }
+
+    public static void Iterate(int lStart, int lEnd, int lInc, byte ofType) {
+        for (int lCurrent = lStart; lCurrent <= lEnd; lCurrent += lInc) {
+            Solution s = new OnionSolution(100, lCurrent);
+            DataCollector dc = new DataCollector(s, ofType);
+            dc.play();
+            dc.exportToCSV();
         }
     }
 }
