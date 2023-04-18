@@ -240,7 +240,7 @@ public class Simulator {
 
     /**
      * get the percentage of infected people (at any time)
-     * @return
+     * @return double [0,1]
      */
     public double getInfectionRate() {
         if (this.peopleMap.size() == 0) {

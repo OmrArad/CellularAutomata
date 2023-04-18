@@ -1,6 +1,6 @@
 public class OnionSolution extends Solution{
     private static final int LAYERS = 3;
-    private static final int DOUBT_LEVELS = 4;
+
     public OnionSolution(int gridSize, int l) {
         this.l = l;
 

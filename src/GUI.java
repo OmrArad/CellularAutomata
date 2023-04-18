@@ -57,6 +57,7 @@ public class GUI implements ActionListener {
 
     private final Simulator sim;
     private JButton loadButton;
+    private JComboBox<String> ddm;
 
     /**
      * Constructor.
@@ -124,14 +125,16 @@ public class GUI implements ActionListener {
      */
     private void setControlsPanel() {
         // set layout for the panel
-        this.controls.setLayout(new FlowLayout());
+        this.controls.setLayout(new BoxLayout(this.controls, BoxLayout.Y_AXIS));
+        JPanel row1 = new JPanel();
+        JPanel row2 = new JPanel();
 
         // make play button
         JButton pb = new JButton("Play");
         pb.setIcon(new ImageIcon(getClass().getResource("/play.png")));
         pb.addActionListener(this);
         this.playButton = pb;
-        this.controls.add(this.playButton);
+        row1.add((this.playButton));
 
         // make pause button
         JButton pause = new JButton("Pause");
@@ -139,124 +142,117 @@ public class GUI implements ActionListener {
         pause.addActionListener(this);
         pause.setEnabled(false);
         this.stopButton = pause;
-        this.controls.add(this.stopButton);
+        row1.add(this.stopButton);
 
         // make reset button
         JButton reset = new JButton("Reset");
         reset.setIcon(new ImageIcon(getClass().getResource("/reset.png")));
         reset.addActionListener(this);
         this.resetButton = reset;
-        this.controls.add(this.resetButton);
+        row1.add(this.resetButton);
 
         // make l value spinner
         JLabel l1 = new JLabel("L:");
         l1.setBorder(new EmptyBorder(5,25,5,2));
-        this.controls.add(l1);
+        row1.add(l1);
 
         SpinnerModel model1 = new SpinnerNumberModel(L, 0, Integer.MAX_VALUE, 1);
         JSpinner spinner1 = new JSpinner(model1);
-        this.controls.add(spinner1);
+        row1.add(spinner1);
         this.lValueSpinner = spinner1;
 
         // make p value spinner
         JLabel l2 = new JLabel("P:");
         l2.setBorder(new EmptyBorder(5,25,5,2));
-        this.controls.add(l2);
+        row1.add(l2);
 
         SpinnerModel model2 = new SpinnerNumberModel(P, 0.00, 1.00, 0.01);
         JSpinner spinner2 = new JSpinner(model2);
         spinner2.setPreferredSize(new Dimension(50, spinner2.getMinimumSize().height));
-        this.controls.add(spinner2);
+        row1.add(spinner2);
         this.pValueSpinner = spinner2;
 
         // make speed value spinner
         JLabel l3 = new JLabel("Speed:");
         l3.setIcon(new ImageIcon(getClass().getResource("/speedometer.png")));
-        //l3.setIcon(new ImageIcon("icons/speedometer.png"));
         l3.setBorder(new EmptyBorder(5,25,5,2));
-        this.controls.add(l3);
+        row1.add(l3);
 
         SpinnerModel model3 = new SpinnerNumberModel(1.0, 0.25, 5.00, 0.25);
         JSpinner spinner3 = new JSpinner(model3);
-        this.controls.add(spinner3);
+        row1.add(spinner3);
         this.speedValueSpinner = spinner3;
 
         // make skip steps spinner and button.
-        JLabel l4 = new JLabel("    Steps:");
-        this.controls.add(l4);
-
+        row1.add(new JLabel("    Steps:"));
 
         SpinnerModel model4 = new SpinnerNumberModel(1, 1, 100000, 1);
         JSpinner spinner4 = new JSpinner(model4);
-        this.controls.add(spinner4);
+        row1.add(spinner4);
         this.skipValueSpinner = spinner4;
 
         JButton skip = new JButton("Skip");
         skip.setIcon(new ImageIcon(getClass().getResource("/skip.png")));
         skip.addActionListener(this);
         this.skipButton = skip;
-        this.controls.add(this.skipButton);
+        row1.add(this.skipButton);
 
         // s1,s2,s3,4 ratios
-        JLabel l5 = new JLabel("    S1:");
-        this.controls.add(l5);
+        row1.add(new JLabel("    S1:"));
         SpinnerModel model5 = new SpinnerNumberModel(this.lastS1, 0, 1, 0.01);
         JSpinner s1Spinner = new JSpinner(model5);
         s1Spinner.setPreferredSize(new Dimension(50, s1Spinner.getMinimumSize().height));
-        this.controls.add(s1Spinner);
+        row1.add(s1Spinner);
         this.s1Spinner = s1Spinner;
-        this.controls.add(this.s1Spinner);
 
-        JLabel l6 = new JLabel("S2:");
-        this.controls.add(l6);
+        row1.add(new JLabel("S2:"));
         SpinnerModel model6 = new SpinnerNumberModel(this.lastS2, 0, 1, 0.01);
         JSpinner s2spinner = new JSpinner(model6);
         s2spinner.setPreferredSize(new Dimension(50, s2spinner.getMinimumSize().height));
-        this.controls.add(s2spinner);
+        row1.add(s2spinner);
         this.s2Spinner = s2spinner;
-        this.controls.add(this.s2Spinner);
 
-        JLabel l7 = new JLabel("S3:");
-        this.controls.add(l7);
+        row1.add(new JLabel("S3:"));
         SpinnerModel model7 = new SpinnerNumberModel(this.lastS3, 0, 1, 0.01);
         JSpinner s3spinner = new JSpinner(model7);
         s3spinner.setPreferredSize(new Dimension(50, s3spinner.getMinimumSize().height));
-        this.controls.add(s3spinner);
+        row1.add(s3spinner);
         this.s3Spinner = s3spinner;
-        this.controls.add(this.s3Spinner);
 
-        JLabel l8 = new JLabel("S4:");
-        this.controls.add(l8);
+        row1.add(new JLabel("S4:"));
         SpinnerModel model8 = new SpinnerNumberModel(this.lastS4, 0, 1, 0.01);
         JSpinner s4spinner = new JSpinner(model8);
         s4spinner.setPreferredSize(new Dimension(50, s4spinner.getMinimumSize().height));
-        this.controls.add(s4spinner);
+        row1.add(s4spinner);
         this.s4Spinner = s4spinner;
-        this.controls.add(this.s4Spinner);
 
         // make neighbors type check boxes
-        JLabel l9 = new JLabel("    Neighbors:");
-        this.controls.add(l9);
+        row1.add(new JLabel("    Neighbors:"));
 
         JCheckBox jcb1 = new JCheckBox("Diagonal", true);
         this.diagonalCB = jcb1;
-        this.controls.add(jcb1);
+        row1.add(jcb1);
         JCheckBox jcb2 = new JCheckBox("Lateral", true);
         this.lateralCB = jcb2;
-        this.controls.add(jcb2);
+        row1.add(jcb2);
 
         // make round counter
-        JLabel l10 = new JLabel("    Round:");
-        this.controls.add(l10);
-        JLabel countLabel = new JLabel("0   ");
-        this.controls.add(countLabel);
+        row1.add(new JLabel("    Round:"));
+        JLabel countLabel = new JLabel("0");
+        row1.add(countLabel);
         this.countLabel = countLabel;
 
+
+        String[] options = {"---", "Onion", "Elliptic"};
+        this.ddm = new JComboBox<>(options);
+        row2.add(this.ddm);
         this.loadButton = new JButton("Load");
-        this.controls.add(this.loadButton);
+        this.loadButton.setIcon(new ImageIcon(getClass().getResource("/load.png")));
+        row2.add(this.loadButton);
         this.loadButton.addActionListener(this);
 
-
+        this.controls.add(row1);
+        this.controls.add(row2);
         // add the panel to the frame
         this.frame.add(this.controls, BorderLayout.NORTH);
     }
@@ -338,7 +334,7 @@ public class GUI implements ActionListener {
             // set reset button functionality
             //reset the count (current round) value to 0
             this.count = 0;
-            this.countLabel.setText("0  ");
+            this.countLabel.setText("0");
             // turn on
             this.pValueSpinner.setEnabled(true);
             this.lValueSpinner.setEnabled(true);
@@ -430,19 +426,28 @@ public class GUI implements ActionListener {
             this.playButton.setEnabled(true);
             this.resetButton.setEnabled(true);
         } else if(e.getSource() == this.loadButton) {
-            this.shouldStop = true;
-            this.playButton.setEnabled(true);
-            this.resetButton.setEnabled(true);
-            this.stopButton.setEnabled(false);
-            this.s1Spinner.setEnabled(false);
-            this.s2Spinner.setEnabled(false);
-            this.s3Spinner.setEnabled(false);
-            this.s4Spinner.setEnabled(false);
-            this.lastL = Integer.parseInt(this.lValueSpinner.getValue().toString());
-            this.count = 0;
-            this.countLabel.setText("0  ");
-            this.loadSolution(new OnionSolution(DIMENSION, this.lastL));
+            if(this.ddm.getSelectedIndex() != 0) {
+                this.shouldStop = true;
+                this.playButton.setEnabled(true);
+                this.resetButton.setEnabled(true);
+                this.stopButton.setEnabled(false);
+                this.s1Spinner.setEnabled(false);
+                this.s2Spinner.setEnabled(false);
+                this.s3Spinner.setEnabled(false);
+                this.s4Spinner.setEnabled(false);
+                this.lastL = Integer.parseInt(this.lValueSpinner.getValue().toString());
+                this.count = 0;
+                this.countLabel.setText("0");
+                this.loadSolution(getSolution(this.ddm.getSelectedIndex()));
+            }
         }
+    }
+
+    private Solution getSolution(int index) {
+        return switch (index) {
+            case 1 -> new OnionSolution(DIMENSION, this.lastL);
+            default -> new EllipticalSolution(DIMENSION, this.lastL);
+        };
     }
 
     private void loadSolution(Solution solution) {
