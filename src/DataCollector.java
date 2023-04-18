@@ -56,6 +56,10 @@ public class DataCollector {
 
     public DataCollector(Solution s, byte ofType) {
         this.l = s.getL();
+        this.s1 = s.getS1();
+        this.s2 = s.getS2();
+        this.s3 = s.getS3();
+        this.s4 = s.getS4();
         this.nType = ofType;
         this.simulator = new Simulator(s);
     }
