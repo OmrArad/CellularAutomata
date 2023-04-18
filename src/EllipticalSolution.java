@@ -1,8 +1,8 @@
 public class EllipticalSolution extends Solution{
-    int[] s_counters = new int[DOUBT_LEVELS];
+    
     public EllipticalSolution(int gridSize, int l) {
         this.l = l;
-
+        int[] s_counters = new int[DOUBT_LEVELS];
         for (int i = 0; i < gridSize / 2; i++) {
             for (int j = 0; j < 4; j++) {
                 int cx = gridSize / 2;
@@ -17,7 +17,7 @@ public class EllipticalSolution extends Solution{
 
                             Location loc = new Location(x, y);
                             Person p = new Person(loc, j + 1, l, gridSize);
-                            this.s_counters[j]++;
+                            s_counters[j]++;
                             this.m.put(loc, p);
                         }
                     }
