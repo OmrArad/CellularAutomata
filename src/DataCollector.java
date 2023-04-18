@@ -145,7 +145,7 @@ public class DataCollector {
 
     public static void Iterate(int lStart, int lEnd, int lInc, byte ofType) {
         for (int lCurrent = lStart; lCurrent <= lEnd; lCurrent += lInc) {
-            Solution s = new OnionSolution(100, lCurrent);
+            Solution s = new OnionSolution(GRID_SIZE, lCurrent);
             DataCollector dc = new DataCollector(s, ofType);
             dc.play();
             dc.exportToCSV();
