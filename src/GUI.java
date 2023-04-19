@@ -29,6 +29,9 @@ public class GUI implements ActionListener {
     private JButton stopButton;
     private JButton resetButton;
     private JButton skipButton;
+    private JButton loadButton;
+    // drop down menu, part of the control panel
+    private JComboBox<String> ddm;
     // spinners, part of the control panel
     private JSpinner pValueSpinner;
     private JSpinner lValueSpinner;
@@ -56,8 +59,6 @@ public class GUI implements ActionListener {
     private byte lastType = Person.ALL;
 
     private final Simulator sim;
-    private JButton loadButton;
-    private JComboBox<String> ddm;
 
     /**
      * Constructor.
@@ -243,7 +244,7 @@ public class GUI implements ActionListener {
         this.countLabel = countLabel;
 
 
-        String[] options = {"---", "Onion", "Elliptic"};
+        String[] options = {"---", "Onion", "Elliptic", "Checkers", "Scotland"};
         this.ddm = new JComboBox<>(options);
         row2.add(this.ddm);
         this.loadButton = new JButton("Load");
@@ -446,7 +447,9 @@ public class GUI implements ActionListener {
     private Solution getSolution(int index) {
         return switch (index) {
             case 1 -> new OnionSolution(DIMENSION, this.lastL);
-            default -> new EllipticalSolution(DIMENSION, this.lastL);
+            case 2 -> new EllipticalSolution(DIMENSION, this.lastL);
+            case 3 -> new CheckerboardSolution(DIMENSION, this.lastL);
+            default -> new ScottishSolution(DIMENSION, this.lastL);
         };
     }
 

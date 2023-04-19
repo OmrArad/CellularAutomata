@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.List;
 
 public abstract class Solution {
     protected static final int DOUBT_LEVELS = 4;
