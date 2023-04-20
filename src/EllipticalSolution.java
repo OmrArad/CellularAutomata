@@ -31,6 +31,6 @@ public class EllipticalSolution extends Solution{
             }
         }
         // set first
-        this.first = this.m.get(new Location(gridSize/2, gridSize/2));
+        this.setFirstRandomly();
     }
 }
