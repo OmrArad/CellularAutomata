@@ -1,23 +1,13 @@
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 /**
  * Simulator class.
  */
 public class Simulator {
-
-    private int gridSize;
-    // Probability of Person creation
-    private double p;
-
-    // Rumor Bound
-    private int l;
 
     private int currentRound = 0;
 
@@ -31,40 +21,10 @@ public class Simulator {
 
     private final Set<Person> allTimeInfected = new HashSet<>();
 
-    /**
-     * Constructor.
-     * @param p the probability value.
-     * @param l the l value (rumour lifespan)
-     * @param gridSize the size of the simulation grid.
-     */
-    public Simulator(double p, int l, int gridSize) {
-        // set the distribution to default (1/4 each)
-        this(p, l, gridSize, 0.25, 0.25, 0.25, 0.25);
-    }
 
-    /**
-     * Constructor.
-     * @param p the probability value.
-     * @param l the l value (rumour lifespan)
-     * @param gridSize the size of the simulation grid.
-     * @param s1 the s1 ratio.
-     * @param s2 the s2 ratio.
-     * @param s3 the s3 ratio.
-     * @param s4 the s4 ratio.
-     */
-    public Simulator(double p, int l, int gridSize, double s1, double s2, double s3, double s4) {
-        this.gridSize = gridSize;
-        this.p = p;
-        this.l = l;
-        this.currentRound = 0;
-        // make needed data structures
-        this.peopleMap = new HashMap<>();
-        // initialise the simulation.
-        this.init(s1, s2, s3, s4);
-    }
+
 
     public Simulator(Solution s) {
-        this.l = s.getL();
         this.init(s.getMap(), s.getFirst());
     }
 
@@ -76,97 +36,17 @@ public class Simulator {
         return this.currentRound;
     }
 
-    /**
-     * Generate people - simulation cells.
-     * @param s1 ratio of s1.
-     * @param s2 ratio of s2.
-     * @param s3 ratio of s3.
-     * @param s4 ratio of s4.
-     */
-    private void createPeople(double s1, double s2, double s3, double s4) {
-        LinkedList<Location> locations = new LinkedList<>();
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                double random = Math.random();
-                // check if a new person should be generated (probability based)
-                if (random <= this.p) {
-                    locations.add(new Location(i, j));
-                }
-            }
-        }
-        // set the amounts of each type of doubt level.
-        int x1 = (int) Math.round(s1 * locations.size());
-        int x2 = (int) Math.round(s2 * locations.size());
-        int x3 = (int) Math.round(s3 * locations.size());
-        int x4 = (int) Math.round(s4 * locations.size());
-
-        // check if the amount is valid, fix it if necessary.
-        int sum = x1 + x2 + x3 + x4;
-        if (sum < locations.size()) {
-            x1 += locations.size() - sum;
-        }
-        // shuffle the locations (in order to avoid getting predictable locations for each type)
-        Collections.shuffle(locations);
-        int count = 0;
-        for (Location location : locations) {
-            // get the right doubt level.
-            int doubt = 4;
-            if (count < x1) {
-                doubt = 1;
-            } else if (count < x1 + x2) {
-                doubt = 2;
-            } else if (count < x1 + x2 + x3) {
-                doubt = 3;
-            }
-            // initialise a new person in that spot.
-            Person person = new Person(location, doubt, l, this.gridSize);
-            // save in map.
-            peopleMap.put(location, person);
-            count++;
-        }
-    }
-
-    /**
-     * Initialize the simulation, using default distribution (1/4 each).
-     */
-    private void init() {
-        this.init(0.25, 0.25, 0.25, 0.25);
-    }
-
-    /**
-     * Initialize the simulation.
-     * @param s1 ratio of s1
-     * @param s2 ratio of s2
-     * @param s3 ratio if s3
-     * @param s4 ratio of s4
-     */
-    private void init(double s1, double s2, double s3, double s4) {
-        // clear data
-        this.infected.clear();
-        this.peopleMap.clear();
-        this.potentialInfected.clear();
-        this.allTimeInfected.clear();
-        // people creation
-        this.createPeople(s1, s2, s3, s4);
-        // choose random person to spread rumor
-        Random rand = new Random();
-        ArrayList<Person> personList = new ArrayList<>(peopleMap.values());
-        if (personList.size() > 0) {
-            Person start = personList.get(rand.nextInt(personList.size()));
-            start.startSpreading(0);
-            this.infected.add(start);
-            this.allTimeInfected.add(start);
-        }
-    }
 
     private void init(HashMap<Location, Person> m, Person i) {
         this.infected.clear();
         this.potentialInfected.clear();
         this.allTimeInfected.clear();
         this.peopleMap = m;
-        i.startSpreading(0);
-        this.infected.add(i);
-        this.allTimeInfected.add(i);
+        if (i != null) {
+            i.startSpreading(0);
+            this.infected.add(i);
+            this.allTimeInfected.add(i);
+        }
     }
 
     /**
@@ -223,24 +103,7 @@ public class Simulator {
         this.currentRound++;
     }
 
-    /**
-     * reset the simulation.
-     * @param p probability
-     * @param l rumour lifespan
-     * @param s1 s1 ratio
-     * @param s2 s2 ratio
-     * @param s3 s3 ratio
-     * @param s4 s4 ratio
-     */
-    public void reset(double p, int l, double s1, double s2, double s3, double s4) {
-        this.l = l;
-        this.p = p;
-        this.currentRound = 0;
-        this.init(s1, s2, s3, s4);
-    }
-
-    public void reset(int l, HashMap<Location, Person> m, Person start) {
-        this.l = l;
+    public void reset(HashMap<Location, Person> m, Person start) {
         this.currentRound = 0;
         this.init(m, start);
     }

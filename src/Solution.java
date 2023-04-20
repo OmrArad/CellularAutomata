@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public abstract class Solution {
     protected static final int DOUBT_LEVELS = 4;
@@ -8,6 +10,7 @@ public abstract class Solution {
     protected double s2 = 0;
     protected double s3 = 0;
     protected double s4 = 0;
+    protected double p = 1;
     protected int l;
 
     public HashMap<Location, Person> getMap() {
@@ -36,6 +39,18 @@ public abstract class Solution {
 
     public int getL() {
         return this.l;
+    }
+
+    public double getP() {
+        return this.p;
+    }
+
+    protected void setFirstRandomly() {
+        Random rand = new Random();
+        ArrayList<Person> personList = new ArrayList<>(this.m.values());
+        if (personList.size() > 0) {
+            this.first = personList.get(rand.nextInt(personList.size()));
+        }
     }
 }
 

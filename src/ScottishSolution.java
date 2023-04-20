@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Random;
-
 public class ScottishSolution extends Solution{
     private static final int WIDTH = 5;
     public ScottishSolution(int gridSize, int l) {
@@ -15,11 +12,7 @@ public class ScottishSolution extends Solution{
                 }
             }
         }
-        Random rand = new Random();
-        ArrayList<Person> personList = new ArrayList<>(this.m.values());
-        if (personList.size() > 0) {
-            this.first = personList.get(rand.nextInt(personList.size()));
-        }
+        this.setFirstRandomly();
         this.s2 = 1.0;
     }
 }

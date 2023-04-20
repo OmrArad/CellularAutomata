@@ -27,7 +27,6 @@ public class GUI implements ActionListener {
     // buttons, part of the control panel
     private JButton playButton;
     private JButton stopButton;
-    private JButton resetButton;
     private JButton skipButton;
     private JButton loadButton;
     // drop down menu, part of the control panel
@@ -65,7 +64,7 @@ public class GUI implements ActionListener {
      */
     public GUI() {
         // initialize new simulation using the default values of p,l and grid size.
-        this.sim = new Simulator(P, L, DIMENSION);
+        this.sim = new Simulator(new FreestyleSolution(DIMENSION, P, L));
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // set frame size
         this.frame.setSize(FRAME_SIZE,FRAME_SIZE);
@@ -145,12 +144,14 @@ public class GUI implements ActionListener {
         this.stopButton = pause;
         row1.add(this.stopButton);
 
-        // make reset button
-        JButton reset = new JButton("Reset");
-        reset.setIcon(new ImageIcon(getClass().getResource("/reset.png")));
-        reset.addActionListener(this);
-        this.resetButton = reset;
-        row1.add(this.resetButton);
+        row1.add(new Label("\t"));
+        String[] options = {"Freestyle", "Onion", "Elliptic", "Checkers", "Scotland"};
+        this.ddm = new JComboBox<>(options);
+        row1.add(this.ddm);
+        this.loadButton = new JButton("Load");
+        this.loadButton.setIcon(new ImageIcon(getClass().getResource("/load.png")));
+        row1.add(this.loadButton);
+        this.loadButton.addActionListener(this);
 
         // make l value spinner
         JLabel l1 = new JLabel("L:");
@@ -244,13 +245,6 @@ public class GUI implements ActionListener {
         this.countLabel = countLabel;
 
 
-        String[] options = {"---", "Onion", "Elliptic", "Checkers", "Scotland"};
-        this.ddm = new JComboBox<>(options);
-        row2.add(this.ddm);
-        this.loadButton = new JButton("Load");
-        this.loadButton.setIcon(new ImageIcon(getClass().getResource("/load.png")));
-        row2.add(this.loadButton);
-        this.loadButton.addActionListener(this);
 
         this.controls.add(row1);
         this.controls.add(row2);
@@ -313,6 +307,8 @@ public class GUI implements ActionListener {
             this.s3Spinner.setEnabled(false);
             this.s4Spinner.setEnabled(false);
             this.playButton.setEnabled(false);
+            this.loadButton.setEnabled(false);
+            this.ddm.setEnabled(false);
             // turn on the pause button.
             this.stopButton.setEnabled(true);
             this.shouldStop = false;
@@ -323,6 +319,8 @@ public class GUI implements ActionListener {
             // turn on buttons
             this.pValueSpinner.setEnabled(true);
             this.lValueSpinner.setEnabled(true);
+            this.loadButton.setEnabled(true);
+            this.ddm.setEnabled(true);
             this.s1Spinner.setEnabled(true);
             this.s2Spinner.setEnabled(true);
             this.s3Spinner.setEnabled(true);
@@ -331,73 +329,6 @@ public class GUI implements ActionListener {
             // turn off the pause button
             this.stopButton.setEnabled(false);
             this.shouldStop = true;
-        } else if (e.getSource() == this.resetButton) {
-            // set reset button functionality
-            //reset the count (current round) value to 0
-            this.count = 0;
-            this.countLabel.setText("0");
-            // turn on
-            this.pValueSpinner.setEnabled(true);
-            this.lValueSpinner.setEnabled(true);
-            this.shouldStop = true;
-            this.playButton.setEnabled(true);
-            // turn off pause button.
-            this.stopButton.setEnabled(false);
-            // turn on ratio spinners.
-            this.s1Spinner.setEnabled(true);
-            this.s2Spinner.setEnabled(true);
-            this.s3Spinner.setEnabled(true);
-            this.s4Spinner.setEnabled(true);
-            // get and display the updated values.
-            double s1 = Double.parseDouble(this.s1Spinner.getValue().toString());
-            this.lastS1 = s1;
-            double s2 = Double.parseDouble(this.s2Spinner.getValue().toString());
-            this.lastS2 = s2;
-            double s3 = Double.parseDouble(this.s3Spinner.getValue().toString());
-            this.lastS3 = s3;
-            double s4 = Double.parseDouble(this.s4Spinner.getValue().toString());
-            this.lastS4 = s4;
-            double sum = s1 + s2 + s3 + s4;
-            // check if the distribution is valid.
-            if (sum < 1.0) {
-                // in case it does not add up to 1, add the difference to s1.
-                this.lastS1 += Math.abs(1.0 - sum);
-                this.s1Spinner.setValue(this.lastS1);
-            } else if (sum > 1.0) {
-                // in case it adds up to more than 1, subtract from s1.
-                this.lastS1 -= Math.abs(1.0 - sum);
-                // check that s1 is still non negative.
-                if (this.lastS1 < 0) {
-                    // update values to default in case s1 in negative (previous update failed).
-                    this.lastS1 = S;
-                    this.lastS2 = S;
-                    this.lastS3 = S;
-                    this.lastS4 = S;
-                    this.s2Spinner.setValue(this.lastS2);
-                    this.s3Spinner.setValue(this.lastS3);
-                    this.s4Spinner.setValue(this.lastS4);
-                }
-                this.s1Spinner.setValue(this.lastS1);
-            } else {
-                // valid distribution case
-                this.s1Spinner.setValue(this.lastS1);
-                this.s2Spinner.setValue(this.lastS2);
-                this.s3Spinner.setValue(this.lastS3);
-                this.s4Spinner.setValue(this.lastS4);
-            }
-            // update p and l values.
-            double p = Double.parseDouble(this.pValueSpinner.getValue().toString());
-            this.lastP = p;
-            int l = Integer.parseInt(this.lValueSpinner.getValue().toString());
-            this.lastL = l;
-            // reset the simulation.
-            this.sim.reset(p, l, this.lastS1, this.lastS2, this.lastS3, this.lastS4);
-            // reset all cells colours to white.
-            for (JButton b : this.jbs.values()) {
-                b.setBackground(Color.WHITE);
-            }
-            // set the correct colours using the initData method.
-            this.initData(this.sim.getInfoMap());
         } else if (e.getSource() == this.skipButton) {
             // set skip button functionality
             this.shouldStop = true;
@@ -407,7 +338,7 @@ public class GUI implements ActionListener {
             // turn off buttons
             this.playButton.setEnabled(false);
             this.stopButton.setEnabled(false);
-            this.resetButton.setEnabled(false);
+            this.loadButton.setEnabled(false);
             // set l, p and steps values.
             this.lValueSpinner.setValue(this.lastL);
             this.pValueSpinner.setValue(this.lastP);
@@ -425,27 +356,75 @@ public class GUI implements ActionListener {
             this.countLabel.setText(String.valueOf(this.count));
             // turn on needed buttons.
             this.playButton.setEnabled(true);
-            this.resetButton.setEnabled(true);
+            this.loadButton.setEnabled(true);
         } else if(e.getSource() == this.loadButton) {
-            if(this.ddm.getSelectedIndex() != 0) {
-                this.shouldStop = true;
-                this.playButton.setEnabled(true);
-                this.resetButton.setEnabled(true);
-                this.stopButton.setEnabled(false);
-                this.s1Spinner.setEnabled(false);
-                this.s2Spinner.setEnabled(false);
-                this.s3Spinner.setEnabled(false);
-                this.s4Spinner.setEnabled(false);
-                this.lastL = Integer.parseInt(this.lValueSpinner.getValue().toString());
-                this.count = 0;
-                this.countLabel.setText("0");
-                this.loadSolution(getSolution(this.ddm.getSelectedIndex()));
+            this.shouldStop = true;
+            this.playButton.setEnabled(true);
+            this.stopButton.setEnabled(false);
+            this.s1Spinner.setEnabled(true);
+            this.s2Spinner.setEnabled(true);
+            this.s3Spinner.setEnabled(true);
+            this.s4Spinner.setEnabled(true);
+
+            this.lastL = Integer.parseInt(this.lValueSpinner.getValue().toString());
+            this.count = 0;
+            this.countLabel.setText("0");
+
+            if(this.ddm.getSelectedIndex() == 0) {
+
+
+                this.setDistributionValues();
+                this.lastP = Double.parseDouble(this.pValueSpinner.getValue().toString());
+            } else {
+                this.lastP = 1;
             }
+            this.loadSolution(getSolution(this.ddm.getSelectedIndex()));
+        }
+    }
+
+    private void setDistributionValues() {
+        // get and display the updated values.
+        double s1 = Double.parseDouble(this.s1Spinner.getValue().toString());
+        this.lastS1 = s1;
+        double s2 = Double.parseDouble(this.s2Spinner.getValue().toString());
+        this.lastS2 = s2;
+        double s3 = Double.parseDouble(this.s3Spinner.getValue().toString());
+        this.lastS3 = s3;
+        double s4 = Double.parseDouble(this.s4Spinner.getValue().toString());
+        this.lastS4 = s4;
+        double sum = s1 + s2 + s3 + s4;
+        // check if the distribution is valid.
+        if (sum < 1.0) {
+            // in case it does not add up to 1, add the difference to s1.
+            this.lastS1 += Math.abs(1.0 - sum);
+            this.s1Spinner.setValue(this.lastS1);
+        } else if (sum > 1.0) {
+            // in case it adds up to more than 1, subtract from s1.
+            this.lastS1 -= Math.abs(1.0 - sum);
+            // check that s1 is still non negative.
+            if (this.lastS1 < 0) {
+                // update values to default in case s1 in negative (previous update failed).
+                this.lastS1 = S;
+                this.lastS2 = S;
+                this.lastS3 = S;
+                this.lastS4 = S;
+                this.s2Spinner.setValue(this.lastS2);
+                this.s3Spinner.setValue(this.lastS3);
+                this.s4Spinner.setValue(this.lastS4);
+            }
+            this.s1Spinner.setValue(this.lastS1);
+        } else {
+            // valid distribution case
+            this.s1Spinner.setValue(this.lastS1);
+            this.s2Spinner.setValue(this.lastS2);
+            this.s3Spinner.setValue(this.lastS3);
+            this.s4Spinner.setValue(this.lastS4);
         }
     }
 
     private Solution getSolution(int index) {
         return switch (index) {
+            case 0 -> new FreestyleSolution(DIMENSION, this.lastP, this.lastL, this.lastS1, this.lastS2, this.lastS3, this.lastS4);
             case 1 -> new OnionSolution(DIMENSION, this.lastL);
             case 2 -> new EllipticalSolution(DIMENSION, this.lastL);
             case 3 -> new CheckerboardSolution(DIMENSION, this.lastL);
@@ -462,7 +441,7 @@ public class GUI implements ActionListener {
         this.s2Spinner.setValue(this.lastS2);
         this.s3Spinner.setValue(this.lastS3);
         this.s4Spinner.setValue(this.lastS4);
-        this.sim.reset(solution.getL() ,solution.getMap(), solution.getFirst());
+        this.sim.reset(solution.getMap(), solution.getFirst());
         for (JButton b : this.jbs.values()) {
             b.setBackground(Color.WHITE);
         }

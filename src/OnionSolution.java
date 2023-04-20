@@ -56,10 +56,10 @@ public class OnionSolution extends Solution{
         this.first = this.m.get(new Location(gridSize / 2, gridSize / 2));
 
         if (gridSize != 0) {
-            this.s1 = (double) s_counters[0] / gridSize / gridSize;
-            this.s2 = (double) s_counters[1] / gridSize / gridSize;
-            this.s3 = (double) s_counters[2] / gridSize / gridSize;
-            this.s4 = (double) s_counters[3] / gridSize / gridSize;
+            this.s1 = Math.round(((double) s_counters[0] / gridSize / gridSize) * 100.0) / 100.0;
+            this.s2 = Math.round(((double) s_counters[1] / gridSize / gridSize) * 100.0) / 100.0;
+            this.s3 = Math.round(((double) s_counters[2] / gridSize / gridSize) * 100.0) / 100.0;
+            this.s4 = Math.round(((double) s_counters[3] / gridSize / gridSize) * 100.0) / 100.0;
         }
     }
 }
