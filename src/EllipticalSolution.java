@@ -1,5 +1,13 @@
+/**
+ * EllipticalSolution class.
+ */
 public class EllipticalSolution extends Solution{
 
+    /**
+     * Constructor.
+     * @param gridSize the size of the grid.
+     * @param l rumour lifespan.
+     */
     public EllipticalSolution(int gridSize, int l) {
         this.l = l;
         for (int i = 0; i < gridSize / 2; i++) {
@@ -22,6 +30,7 @@ public class EllipticalSolution extends Solution{
                 }
             }
         }
+        // set first
         this.first = this.m.get(new Location(gridSize/2, gridSize/2));
     }
 }
