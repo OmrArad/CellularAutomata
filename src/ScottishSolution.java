@@ -1,5 +1,5 @@
 /**
- * ScottishSolution Class.
+ * God Save the Class!
  */
 public class ScottishSolution extends Solution{
     // X width
