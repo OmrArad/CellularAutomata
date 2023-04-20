@@ -92,17 +92,6 @@ public class GUI implements ActionListener {
 
     /**
      * update the needed spots.
-     * @param changed a set of type Person. the people that changed in the last simulation step.
-     */
-    private void update(Set<Person> changed) {
-        for (Person p : changed) {
-            JButton jb = this.jbs.get(p.getLocation());
-            jb.setBackground(p.getColor(this.sim.getCurrentRound()));
-        }
-    }
-
-    /**
-     * update the needed spots.
      * @param data a map of data that changed in the last simulation run.
      * @param round the current round number.
      */
@@ -346,7 +335,6 @@ public class GUI implements ActionListener {
                 this.count++;
                 this.setType(this.diagonalCB.isSelected(), this.lateralCB.isSelected());
                 this.sim.makeStep(this.lastType);
-                this.update(this.sim.getChanged());
             }
             // update the visual component.
             this.update(this.sim.getInfoMap(), this.sim.getCurrentRound());
