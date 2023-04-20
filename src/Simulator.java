@@ -61,14 +61,6 @@ public class Simulator {
     }
 
     /**
-     * get a set of the cells that changed their status during the last round.
-     * @return a Set of Person
-     */
-    public Set<Person> getChanged() {
-        return this.changed;
-    }
-
-    /**
      * make a single simulation step.
      */
     public void makeStep(byte ofType) {
