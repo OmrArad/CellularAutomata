@@ -1,8 +1,21 @@
 import java.util.Collections;
 import java.util.LinkedList;
 
+/**
+ * FreestyleSolution class. draws cells randomly.
+ */
 public class FreestyleSolution extends Solution{
-
+    private double p;
+    /**
+     * Constructor.
+     * @param gridSize size of the grid
+     * @param p probability
+     * @param l rumour lifespan
+     * @param s1 s1 distribution
+     * @param s2 s2 distribution
+     * @param s3 s3 distribution
+     * @param s4 s4 distribution
+     */
     public FreestyleSolution(int gridSize, double p, int l, double s1, double s2, double s3, double s4) {
         this.p = p;
         this.l = l;
@@ -10,12 +23,18 @@ public class FreestyleSolution extends Solution{
         this.s2 = s2;
         this.s3 = s3;
         this.s4 = s4;
-
+        // create people
         this.createPeople(gridSize, s1, s2, s3, s4);
-
+        // set first
         this.setFirstRandomly();
     }
 
+    /**
+     * Constructor with default distribution.
+     * @param gridSize the size of the grid.
+     * @param p probability.
+     * @param l rumour lifespan.
+     */
     public FreestyleSolution(int gridSize, double p, int l) {
         this(gridSize, p, l, 0.25, 0.25, 0.25, 0.25);
     }

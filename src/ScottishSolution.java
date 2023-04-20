@@ -1,5 +1,14 @@
+/**
+ * ScottishSolution Class.
+ */
 public class ScottishSolution extends Solution{
+    // X width
     private static final int WIDTH = 5;
+    /**
+     * Constructor.
+     * @param gridSize the size of the grid.
+     * @param l rumour lifespan
+     */
     public ScottishSolution(int gridSize, int l) {
         this.l = l;
 
@@ -12,6 +21,7 @@ public class ScottishSolution extends Solution{
                 }
             }
         }
+        // pick first randomly.
         this.setFirstRandomly();
         this.s2 = 1.0;
     }

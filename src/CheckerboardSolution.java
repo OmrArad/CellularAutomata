@@ -1,4 +1,12 @@
+/**
+ * CheckerboardSolution class.
+ */
 public class CheckerboardSolution extends Solution {
+    /**
+     * Constructor.
+     * @param gridSize the size of the grid.
+     * @param l rumour lifespan
+     */
     public CheckerboardSolution(int gridSize, int l) {
         this.l = l;
         int half = DOUBT_LEVELS / 2;
@@ -15,7 +23,9 @@ public class CheckerboardSolution extends Solution {
                 this.m.put(loc, p);
             }
         }
+        // set first
         this.first = this.m.get(new Location(gridSize/2, gridSize/2));
+        // calculate distribution.
         if (gridSize != 0) {
             this.s1 = (double) s_counters[0] / gridSize / gridSize;
             this.s2 = (double) s_counters[1] / gridSize / gridSize;

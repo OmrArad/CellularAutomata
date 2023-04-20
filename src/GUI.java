@@ -144,6 +144,7 @@ public class GUI implements ActionListener {
         this.stopButton = pause;
         row1.add(this.stopButton);
 
+        // make load button and drop down menu.
         row1.add(new Label("\t"));
         String[] options = {"Freestyle", "Onion", "Elliptic", "Checkers", "Scotland"};
         this.ddm = new JComboBox<>(options);
@@ -244,10 +245,7 @@ public class GUI implements ActionListener {
         row1.add(countLabel);
         this.countLabel = countLabel;
 
-
-
         this.controls.add(row1);
-        this.controls.add(row2);
         // add the panel to the frame
         this.frame.add(this.controls, BorderLayout.NORTH);
     }
@@ -358,7 +356,10 @@ public class GUI implements ActionListener {
             this.playButton.setEnabled(true);
             this.loadButton.setEnabled(true);
         } else if(e.getSource() == this.loadButton) {
+            // set the load button functionality.
+            // stop the simulation.
             this.shouldStop = true;
+            // turn buttons on/off
             this.playButton.setEnabled(true);
             this.stopButton.setEnabled(false);
             this.s1Spinner.setEnabled(true);
@@ -366,13 +367,12 @@ public class GUI implements ActionListener {
             this.s3Spinner.setEnabled(true);
             this.s4Spinner.setEnabled(true);
 
+            // get and set needed values
             this.lastL = Integer.parseInt(this.lValueSpinner.getValue().toString());
             this.count = 0;
             this.countLabel.setText("0");
-
             if(this.ddm.getSelectedIndex() == 0) {
-
-
+                // in case of FreestyleSolution
                 this.setDistributionValues();
                 this.lastP = Double.parseDouble(this.pValueSpinner.getValue().toString());
             } else {
@@ -382,6 +382,9 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * get the distribution values from the spinners and check their validity.
+     */
     private void setDistributionValues() {
         // get and display the updated values.
         double s1 = Double.parseDouble(this.s1Spinner.getValue().toString());
@@ -422,6 +425,11 @@ public class GUI implements ActionListener {
         }
     }
 
+    /**
+     * get the adequate Solution.
+     * @param index the picked index.
+     * @return Solution.
+     */
     private Solution getSolution(int index) {
         return switch (index) {
             case 0 -> new FreestyleSolution(DIMENSION, this.lastP, this.lastL, this.lastS1, this.lastS2, this.lastS3, this.lastS4);
@@ -432,15 +440,23 @@ public class GUI implements ActionListener {
         };
     }
 
+    /**
+     * Load a Solution to the GUI.
+     * @param solution the Solution we want to load.
+     */
     private void loadSolution(Solution solution) {
+        // get values.
         this.lastS1 = solution.getS1();
         this.lastS2 = solution.getS2();
         this.lastS3 = solution.getS3();
         this.lastS4 = solution.getS4();
+        // display values.
         this.s1Spinner.setValue(this.lastS1);
         this.s2Spinner.setValue(this.lastS2);
         this.s3Spinner.setValue(this.lastS3);
         this.s4Spinner.setValue(this.lastS4);
+        this.pValueSpinner.setValue(this.lastP);
+        // erase all cells.
         this.sim.reset(solution.getMap(), solution.getFirst());
         for (JButton b : this.jbs.values()) {
             b.setBackground(Color.WHITE);

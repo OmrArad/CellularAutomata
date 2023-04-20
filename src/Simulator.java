@@ -22,8 +22,10 @@ public class Simulator {
     private final Set<Person> allTimeInfected = new HashSet<>();
 
 
-
-
+    /**
+     * Constructor
+     * @param s Solution.
+     */
     public Simulator(Solution s) {
         this.init(s.getMap(), s.getFirst());
     }
@@ -36,11 +38,12 @@ public class Simulator {
         return this.currentRound;
     }
 
-
+    /**
+     * initialise the needed data for the simulator.
+     * @param m a <Location, Person> map.
+     * @param i a Person to begin from.
+     */
     private void init(HashMap<Location, Person> m, Person i) {
-        this.infected.clear();
-        this.potentialInfected.clear();
-        this.allTimeInfected.clear();
         this.peopleMap = m;
         if (i != null) {
             i.startSpreading(0);
@@ -103,8 +106,18 @@ public class Simulator {
         this.currentRound++;
     }
 
+    /**
+     * Reset the simulator's values.
+     * @param m the new map.
+     * @param start the first person.
+     */
     public void reset(HashMap<Location, Person> m, Person start) {
+        // reset values
         this.currentRound = 0;
+        this.infected.clear();
+        this.potentialInfected.clear();
+        this.allTimeInfected.clear();
+        // set new values
         this.init(m, start);
     }
 

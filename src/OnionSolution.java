@@ -1,6 +1,15 @@
+/**
+ * OnionSolution class
+ */
 public class OnionSolution extends Solution{
+    // how may lines is each layer
     private static final int LAYERS = 3;
 
+    /**
+     * Constructor.
+     * @param gridSize the size of the grid.
+     * @param l rumour lifespan
+     */
     public OnionSolution(int gridSize, int l) {
         this.l = l;
 
@@ -53,8 +62,9 @@ public class OnionSolution extends Solution{
             }
             count++;
         }
+        // set first
         this.first = this.m.get(new Location(gridSize / 2, gridSize / 2));
-
+        // calculate distribution.
         if (gridSize != 0) {
             this.s1 = Math.round(((double) s_counters[0] / gridSize / gridSize) * 100.0) / 100.0;
             this.s2 = Math.round(((double) s_counters[1] / gridSize / gridSize) * 100.0) / 100.0;
