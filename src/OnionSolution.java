@@ -3,7 +3,7 @@
  */
 public class OnionSolution extends Solution{
     // how may lines is each layer
-    private static final int LAYERS = 3;
+    private static final int LAYERS = 4;
 
     /**
      * Constructor.
