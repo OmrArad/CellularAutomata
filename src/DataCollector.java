@@ -6,7 +6,7 @@ import java.io.IOException;
  */
 public class DataCollector {
     // constant values
-    private static final int ROUNDS = 120;
+    private static final int ROUNDS = 240;
     private static final int ITERATIONS = 10;
     private static final int GRID_SIZE = 100;
 
@@ -55,6 +55,7 @@ public class DataCollector {
     }
 
     public DataCollector(Solution s, byte ofType) {
+        this.p = 1;
         this.l = s.getL();
         this.s1 = s.getS1();
         this.s2 = s.getS2();
@@ -80,6 +81,18 @@ public class DataCollector {
             }
             FreestyleSolution fs = new FreestyleSolution(GRID_SIZE, this.p, this.l, this.s1, this.s2, this.s3, this.s4);
             this.simulator.reset(fs.getMap(), fs.getFirst());
+        }
+    }
+
+    public void OnionPlay() {
+        for(int j = 0; j < ITERATIONS; j++) {
+            this.ratesSum[0] += this.simulator.getInfectionRate() / (double) ITERATIONS;
+            for (int i = 1; i <= ROUNDS; i++) {
+                this.simulator.makeStep(this.nType);
+                this.ratesSum[i] += this.simulator.getInfectionRate() / (double) ITERATIONS;
+            }
+            OnionSolution os = new OnionSolution(GRID_SIZE, this.l);
+            this.simulator.reset(os.getMap(), os.getFirst());
         }
     }
 
