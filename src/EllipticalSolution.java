@@ -9,7 +9,11 @@ public class EllipticalSolution extends Solution{
      * @param l rumour lifespan.
      */
     public EllipticalSolution(int gridSize, int l) {
-        this.l = l;
+        super(gridSize, l);
+    }
+
+    @Override
+    protected void setCells() {
         for (int i = 0; i < gridSize / 2; i++) {
             for (int j = 0; j < 4; j++) {
                 int cx = gridSize / 2;

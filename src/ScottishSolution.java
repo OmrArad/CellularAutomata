@@ -12,7 +12,11 @@ public class ScottishSolution extends Solution{
      * @param l rumour lifespan
      */
     public ScottishSolution(int gridSize, int l) {
-        this.l = l;
+        super(gridSize, l);
+    }
+
+    @Override
+    protected void setCells() {
         int[] s_counters = new int[DOUBT_LEVELS];
         int doubt = 0;
 
@@ -20,10 +24,10 @@ public class ScottishSolution extends Solution{
         for(int i = 0; i < gridSize; i++) {
             for(int j = 0; j < gridSize; j++) {
                 if (Math.abs(i - j) >= WIDTH && (i + j + 1 >= WIDTH + gridSize || i + j + 1 <= gridSize - WIDTH)
-                && (i > 0 && i < gridSize - 1) && (j > 0 && j < gridSize - 1)) {
+                        && (i > 0 && i < gridSize - 1) && (j > 0 && j < gridSize - 1)) {
                     doubt = 2;
                     if (i > j && i + j + 1 >= WIDTH + gridSize) {
-                            doubt = 3;
+                        doubt = 3;
                     } else if (i < j && i + j + 1 <= gridSize - WIDTH) {
                         doubt = 1;
                     }

@@ -8,7 +8,11 @@ public class CheckerboardSolution extends Solution {
      * @param l rumour lifespan
      */
     public CheckerboardSolution(int gridSize, int l) {
-        this.l = l;
+        super(gridSize, l);
+    }
+
+    @Override
+    protected void setCells() {
         int half = DOUBT_LEVELS / 2;
         int[] s_counters = new int[DOUBT_LEVELS];
         for(int i = 0; i < gridSize; i++) {

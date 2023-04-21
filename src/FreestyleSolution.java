@@ -17,16 +17,7 @@ public class FreestyleSolution extends Solution{
      * @param s4 s4 distribution
      */
     public FreestyleSolution(int gridSize, double p, int l, double s1, double s2, double s3, double s4) {
-        this.p = p;
-        this.l = l;
-        this.s1 = s1;
-        this.s2 = s2;
-        this.s3 = s3;
-        this.s4 = s4;
-        // create people
-        this.createPeople(gridSize, s1, s2, s3, s4);
-        // set first
-        this.setFirstRandomly();
+        super(gridSize, p, l, s1, s2, s3, s4);
     }
 
     /**
@@ -88,5 +79,14 @@ public class FreestyleSolution extends Solution{
             this.m.put(location, person);
             count++;
         }
+    }
+
+
+    @Override
+    protected void setCells() {
+        // create people
+        this.createPeople(gridSize, s1, s2, s3, s4);
+        // set first
+        this.setFirstRandomly();
     }
 }

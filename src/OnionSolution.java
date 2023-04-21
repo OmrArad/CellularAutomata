@@ -11,8 +11,11 @@ public class OnionSolution extends Solution{
      * @param l rumour lifespan
      */
     public OnionSolution(int gridSize, int l) {
-        this.l = l;
+        super(gridSize, l);
+    }
 
+    @Override
+    protected void setCells() {
         int doubt = 0;
         int rowStart = 0;
         int colStart = 0;

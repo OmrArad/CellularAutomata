@@ -11,6 +11,7 @@ public class DataCollector {
     private static final int GRID_SIZE = 100;
 
     private final byte nType;
+    private final Solution solution;
     private double p;
     private int l;
     private double s1;
@@ -22,7 +23,7 @@ public class DataCollector {
 
 
     /**
-     * Constructor.
+     * Constructor. assumes FreestyleSolution as default.
      * @param p probability.
      * @param l rumor lifespan.
      * @param s1 distribution of s1.
@@ -32,7 +33,8 @@ public class DataCollector {
      * @param ofType type of neighbors.
      */
     public DataCollector(double p, int l, double s1, double s2, double s3, double s4, byte ofType) {
-        this.simulator = new Simulator(new FreestyleSolution(GRID_SIZE, p, l, s1, s2, s3, s4));
+        this.solution = new FreestyleSolution(GRID_SIZE, p, l, s1, s2, s3, s4);
+        this.simulator = new Simulator(this.solution);
         this.p = p;
         this.l = l;
         this.s1 = s1;
@@ -56,6 +58,7 @@ public class DataCollector {
         this.s4 = s.getS4();
         this.nType = ofType;
         this.simulator = new Simulator(s);
+        this.solution = s;
     }
 
 
@@ -69,10 +72,12 @@ public class DataCollector {
                 this.simulator.makeStep(this.nType);
                 this.ratesSum[i] += this.simulator.getInfectionRate() / (double) ITERATIONS;
             }
-            FreestyleSolution fs = new FreestyleSolution(GRID_SIZE, this.p, this.l, this.s1, this.s2, this.s3, this.s4);
-            this.simulator.reset(fs.getMap(), fs.getFirst());
+            this.solution.reset();
+            this.simulator.reset(this.solution.getMap(), this.solution.getFirst());
         }
     }
+
+
 
     /**
      * export the collected data to csv file.
