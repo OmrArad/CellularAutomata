@@ -15,6 +15,7 @@ public abstract class Solution {
     protected double s3 = 0;
     protected double s4 = 0;
     protected int l;
+    protected double p = 1.0;
 
     /**
      * return the data map.
@@ -70,6 +71,14 @@ public abstract class Solution {
      */
     public int getL() {
         return this.l;
+    }
+
+    /**
+     * return the value of p (probability)
+     * @return
+     */
+    public double getP() {
+        return this.p;
     }
 
     /**

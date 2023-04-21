@@ -190,51 +190,52 @@ public class GUI implements ActionListener {
         row1.add(this.skipButton);
 
         // s1,s2,s3,4 ratios
-        row1.add(new JLabel("    S1:"));
+        row2.add(new JLabel("    S1:"));
         SpinnerModel model5 = new SpinnerNumberModel(this.lastS1, 0, 1, 0.01);
         JSpinner s1Spinner = new JSpinner(model5);
         s1Spinner.setPreferredSize(new Dimension(50, s1Spinner.getMinimumSize().height));
-        row1.add(s1Spinner);
+        row2.add(s1Spinner);
         this.s1Spinner = s1Spinner;
 
-        row1.add(new JLabel("S2:"));
+        row2.add(new JLabel("S2:"));
         SpinnerModel model6 = new SpinnerNumberModel(this.lastS2, 0, 1, 0.01);
         JSpinner s2spinner = new JSpinner(model6);
         s2spinner.setPreferredSize(new Dimension(50, s2spinner.getMinimumSize().height));
-        row1.add(s2spinner);
+        row2.add(s2spinner);
         this.s2Spinner = s2spinner;
 
-        row1.add(new JLabel("S3:"));
+        row2.add(new JLabel("S3:"));
         SpinnerModel model7 = new SpinnerNumberModel(this.lastS3, 0, 1, 0.01);
         JSpinner s3spinner = new JSpinner(model7);
         s3spinner.setPreferredSize(new Dimension(50, s3spinner.getMinimumSize().height));
-        row1.add(s3spinner);
+        row2.add(s3spinner);
         this.s3Spinner = s3spinner;
 
-        row1.add(new JLabel("S4:"));
+        row2.add(new JLabel("S4:"));
         SpinnerModel model8 = new SpinnerNumberModel(this.lastS4, 0, 1, 0.01);
         JSpinner s4spinner = new JSpinner(model8);
         s4spinner.setPreferredSize(new Dimension(50, s4spinner.getMinimumSize().height));
-        row1.add(s4spinner);
+        row2.add(s4spinner);
         this.s4Spinner = s4spinner;
 
         // make neighbors type check boxes
-        row1.add(new JLabel("    Neighbors:"));
+        row2.add(new JLabel("    Neighbors:"));
 
         JCheckBox jcb1 = new JCheckBox("Diagonal", true);
         this.diagonalCB = jcb1;
-        row1.add(jcb1);
+        row2.add(jcb1);
         JCheckBox jcb2 = new JCheckBox("Lateral", true);
         this.lateralCB = jcb2;
-        row1.add(jcb2);
+        row2.add(jcb2);
 
         // make round counter
-        row1.add(new JLabel("    Round:"));
+        row2.add(new JLabel("    Round:"));
         JLabel countLabel = new JLabel("0");
-        row1.add(countLabel);
+        row2.add(countLabel);
         this.countLabel = countLabel;
 
         this.controls.add(row1);
+        this.controls.add(row2);
         // add the panel to the frame
         this.frame.add(this.controls, BorderLayout.NORTH);
     }

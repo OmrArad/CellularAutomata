@@ -5,7 +5,7 @@ import java.util.LinkedList;
  * FreestyleSolution class. draws cells randomly.
  */
 public class FreestyleSolution extends Solution{
-    private double p;
+
     /**
      * Constructor.
      * @param gridSize size of the grid

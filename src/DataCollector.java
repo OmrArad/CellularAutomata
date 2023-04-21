@@ -6,7 +6,7 @@ import java.io.IOException;
  */
 public class DataCollector {
     // constant values
-    private static final int ROUNDS = 240;
+    private static final int ROUNDS = 120;
     private static final int ITERATIONS = 10;
     private static final int GRID_SIZE = 100;
 
@@ -20,18 +20,6 @@ public class DataCollector {
     private double[] ratesSum = new double[ROUNDS + 1];
     private final Simulator simulator;
 
-    /**
-     * Constructor.
-     * @param p probability.
-     * @param l rumor lifespan.
-     * @param s1 distribution of s1.
-     * @param s2 distribution of s2.
-     * @param s3 distribution of s3.
-     * @param s4 distribution of s4.
-     */
-    public DataCollector(double p, int l, double s1, double s2, double s3, double s4) {
-        this(p, l, s1, s2, s3, s4, Person.ALL);
-    }
 
     /**
      * Constructor.
@@ -54,8 +42,13 @@ public class DataCollector {
         this.nType = ofType;
     }
 
+    /**
+     * Constructor.
+     * @param s Solution.
+     * @param ofType type of neighbors.
+     */
     public DataCollector(Solution s, byte ofType) {
-        this.p = 1;
+        this.p = s.getP();
         this.l = s.getL();
         this.s1 = s.getS1();
         this.s2 = s.getS2();
@@ -65,41 +58,20 @@ public class DataCollector {
         this.simulator = new Simulator(s);
     }
 
-    public DataCollector(Solution s) {
-        this(s, Person.ALL);
-    }
-
-    /**
-     * Run the simulation once.
-     */
-    public void runOneSimulation() {
-        this.ratesSum[0] += this.simulator.getInfectionRate() / (double) ITERATIONS;
-        for (int i = 1; i <= ROUNDS; i++) {
-            this.simulator.makeStep(this.nType);
-            this.ratesSum[i] += this.simulator.getInfectionRate() / (double) ITERATIONS;
-        }
-    }
 
     /**
      * run the data collecting process.
      */
     public void play() {
         for(int j = 0; j < ITERATIONS; j++) {
-            runOneSimulation();
+            this.ratesSum[0] += this.simulator.getInfectionRate() / (double) ITERATIONS;
+            for (int i = 1; i <= ROUNDS; i++) {
+                this.simulator.makeStep(this.nType);
+                this.ratesSum[i] += this.simulator.getInfectionRate() / (double) ITERATIONS;
+            }
+            FreestyleSolution fs = new FreestyleSolution(GRID_SIZE, this.p, this.l, this.s1, this.s2, this.s3, this.s4);
+            this.simulator.reset(fs.getMap(), fs.getFirst());
         }
-        FreestyleSolution fs = new FreestyleSolution(GRID_SIZE, this.p, this.l, this.s1, this.s2, this.s3, this.s4);
-        this.simulator.reset(fs.getMap(), fs.getFirst());
-    }
-
-    /**
-     * run the data collecting process with the Onion simulation.
-     */
-    public void OnionPlay() {
-        for(int j = 0; j < ITERATIONS; j++) {
-            runOneSimulation();
-        }
-        OnionSolution os = new OnionSolution(GRID_SIZE, this.l);
-        this.simulator.reset(os.getMap(), os.getFirst());
     }
 
     /**
@@ -136,39 +108,6 @@ public class DataCollector {
             System.out.println("Data written to CSV file successfully.");
         } catch (IOException e) {
             System.err.println("Error writing data to CSV file: " + e.getMessage());
-        }
-    }
-
-    /**
-     * tool used for generating sets of data.
-     * @param pStart start value of p
-     * @param pEnd end value of p
-     * @param pInc increment value for p
-     * @param lStart start value of l
-     * @param lEnd end value of l
-     * @param lInc increment value of l
-     * @param s1 distribution of s1.
-     * @param s2 distribution of s2.
-     * @param s3 distribution of s3.
-     * @param s4 distribution of s4.
-     * @param ofType type of neighbors.
-     */
-    public static void Iterate(double pStart, double pEnd, double pInc, int lStart, int lEnd, int lInc, double s1, double s2, double s3, double s4, byte ofType) {
-        for(double pCurrent = pStart; pCurrent <= pEnd; pCurrent += pInc) {
-            for (int lCurrent = lStart; lCurrent <= lEnd; lCurrent += lInc) {
-                DataCollector dc = new DataCollector(pCurrent, lCurrent, s1, s2, s3, s4, ofType);
-                dc.play();
-                dc.exportToCSV();
-            }
-        }
-    }
-
-    public static void Iterate(int lStart, int lEnd, int lInc, byte ofType) {
-        for (int lCurrent = lStart; lCurrent <= lEnd; lCurrent += lInc) {
-            Solution s = new OnionSolution(GRID_SIZE, lCurrent);
-            DataCollector dc = new DataCollector(s, ofType);
-            dc.play();
-            dc.exportToCSV();
         }
     }
 }
