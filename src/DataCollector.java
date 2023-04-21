@@ -70,30 +70,36 @@ public class DataCollector {
     }
 
     /**
+     * Run the simulation once.
+     */
+    public void runOneSimulation() {
+        this.ratesSum[0] += this.simulator.getInfectionRate() / (double) ITERATIONS;
+        for (int i = 1; i <= ROUNDS; i++) {
+            this.simulator.makeStep(this.nType);
+            this.ratesSum[i] += this.simulator.getInfectionRate() / (double) ITERATIONS;
+        }
+    }
+
+    /**
      * run the data collecting process.
      */
     public void play() {
         for(int j = 0; j < ITERATIONS; j++) {
-            this.ratesSum[0] += this.simulator.getInfectionRate() / (double) ITERATIONS;
-            for (int i = 1; i <= ROUNDS; i++) {
-                this.simulator.makeStep(this.nType);
-                this.ratesSum[i] += this.simulator.getInfectionRate() / (double) ITERATIONS;
-            }
-            FreestyleSolution fs = new FreestyleSolution(GRID_SIZE, this.p, this.l, this.s1, this.s2, this.s3, this.s4);
-            this.simulator.reset(fs.getMap(), fs.getFirst());
+            runOneSimulation();
         }
+        FreestyleSolution fs = new FreestyleSolution(GRID_SIZE, this.p, this.l, this.s1, this.s2, this.s3, this.s4);
+        this.simulator.reset(fs.getMap(), fs.getFirst());
     }
 
+    /**
+     * run the data collecting process with the Onion simulation.
+     */
     public void OnionPlay() {
         for(int j = 0; j < ITERATIONS; j++) {
-            this.ratesSum[0] += this.simulator.getInfectionRate() / (double) ITERATIONS;
-            for (int i = 1; i <= ROUNDS; i++) {
-                this.simulator.makeStep(this.nType);
-                this.ratesSum[i] += this.simulator.getInfectionRate() / (double) ITERATIONS;
-            }
-            OnionSolution os = new OnionSolution(GRID_SIZE, this.l);
-            this.simulator.reset(os.getMap(), os.getFirst());
+            runOneSimulation();
         }
+        OnionSolution os = new OnionSolution(GRID_SIZE, this.l);
+        this.simulator.reset(os.getMap(), os.getFirst());
     }
 
     /**
