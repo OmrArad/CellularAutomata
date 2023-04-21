@@ -18,10 +18,25 @@ public abstract class Solution {
     protected double p;
     protected int gridSize;
 
+    /**
+     * Constructor.
+     * @param gridSize size of grid.
+     * @param l rumour lifespan.
+     */
     public Solution(int gridSize, int l) {
         this(gridSize, 1.0, l, 0, 0, 0, 0);
     }
 
+    /**
+     * Constructor.
+     * @param gridSize size of grid.
+     * @param p probability.
+     * @param l rumour lifespan.
+     * @param s1 s1 distribution.
+     * @param s2 s2 distribution.
+     * @param s3 s3 distribution.
+     * @param s4 s4 distribution.
+     */
     public Solution(int gridSize, double p, int l, double s1, double s2, double s3, double s4) {
         this.gridSize = gridSize;
         this.p = p;
